@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Menlo;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+svg#graph {
+  background: #CCC;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+g.node text.name {
+  text-anchor: middle;
+}
+
+g.node g.outports text {
+  text-anchor: end;
+}
+
+g.node text {
+  fill: red;
+  cursor: pointer;
+  user-select: none;
+}
+
+g.node text.name {
+  fill: black;
+  font-weight: bold;
+}
+
+g.node text:hover {
+  fill: black;
+}
+
+g.node rect {
+  fill: #FFF;
+  stroke: #AAA;
+  rx: 5;
+  ry: 5;
+}
