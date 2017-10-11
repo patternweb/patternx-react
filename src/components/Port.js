@@ -2,11 +2,11 @@ import React from "react";
 
 const handlePortClick = (clickFn, name, processId) => event => {
   event.stopPropagation();
-  clickFn(name, processId);
+  clickFn(name, processId, event.currentTarget);
 };
 
-const Port = ({ name, type, y, clickFn, processId }) => (
-  <text y={y} onClick={handlePortClick(clickFn, name, processId)}>
+const Port = ({ id, name, type, y, clickFn, processId }) => (
+  <text y={y} id={id} onClick={handlePortClick(clickFn, name, processId)}>
     {name}
     {`<${type}>`}
   </text>

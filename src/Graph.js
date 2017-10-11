@@ -3,17 +3,31 @@ import Libs from "./Libs";
 import Node from "./components/Node";
 import Edge from "./components/Edge";
 import get from "lodash/get";
+import { createFiles, createGist, loadGistCode } from "./github";
 
 class Graph extends Component {
   state = {
     nodes: [],
-    edges: []
+    edges: [],
+    fromX: 0,
+    fromY: 0
   };
 
   constructor(props) {
     super(props);
     this.activeNodeId = undefined;
     this.dragOffset = undefined;
+
+    const params = new URLSearchParams(window.location.search);
+    const gistID = params.get("gist");
+    if (gistID) {
+      loadGistCode(gistID)
+        .catch(err => alert(err.message))
+        .then(code => {
+          this.setState(JSON.parse(code));
+        })
+        .catch(err => alert(err.message));
+    }
   }
 
   nodeClicked(event) {
@@ -25,8 +39,13 @@ class Graph extends Component {
     // console.log({inport, processId})
   }
 
-  outportClicked(outport, processId) {
-    console.log({ outport, processId });
+  outportClicked(outport, processId, port) {
+    const rect = port.getBoundingClientRect();
+    this.setState({
+      ...this.state,
+      fromX: rect.x + rect.width,
+      fromY: rect.y + rect.height / 2
+    });
     // const activeEdge = <Edge fromX={100} toX={100} fromY={100} toY={100} />
     // this.setState({...this.state, activeEdge})
   }
@@ -102,6 +121,22 @@ class Graph extends Component {
     );
   }
 
+  saveGist(event) {
+    console.log("saving...");
+    createGist(createFiles(JSON.stringify(this.state, null, 2)))
+      .then(gist => {
+        console.log(gist);
+        const params = new URLSearchParams(window.location.search);
+        params.set("gist", gist.id);
+        window.history.replaceState(
+          {},
+          "",
+          `${window.location.pathname}?${params}`
+        );
+      })
+      .catch(err => console.error(err.message));
+  }
+
   render() {
     return (
       <svg
@@ -110,10 +145,18 @@ class Graph extends Component {
         onMouseUp={this.handleMouseUp.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
       >
-        <g id="edges">
-          <Edge fromX={100} fromY={200} toX={500} toY={700} />
-        </g>
+        <g id="edges" />
         <g id="nodes">{this.state.nodes.map(this.buildNode.bind(this))}</g>
+        <Edge
+          fromX={this.state.fromX}
+          fromY={this.state.fromY}
+          toX={500}
+          toY={700}
+        />
+
+        <text x={20} y={20} onClick={this.saveGist.bind(this)}>
+          Save Gist
+        </text>
       </svg>
     );
   }

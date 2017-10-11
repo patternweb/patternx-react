@@ -12,20 +12,24 @@ const portParams = (port, index, processId) => ({
 
 class Node extends Component {
   buildInport(port, index) {
+    const id = [port.name, this.props.id].join(">");
     return (
       <Port
         {...portParams(port, index, this.props.id)}
-        key={[port.name, this.props.id].join(">")}
+        key={id}
+        id={id}
         clickFn={this.props.inportClicked}
       />
     );
   }
 
   buildOutport(port, index) {
+    const id = [this.props.id, port.name].join(">");
     return (
       <Port
         {...portParams(port, index, this.props.id)}
-        key={[this.props.id, port.name].join(">")}
+        key={id}
+        id={id}
         clickFn={this.props.outportClicked}
       />
     );
