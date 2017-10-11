@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Node from "./components/Node"
 
 class App extends Component {
+
+  state = {
+    value: 10
+  }
+
+  nodeClicked(event) {
+    event.stopPropagation();
+    // console.log(event.target)
+  }
+
+  svgClick(event) {
+    console.log(event)
+  }
+
+  updateVal(event) {
+    // console.log("updating", event.target.value)
+    this.setState({value: event.target.value})
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <svg onClick={this.svgClick}>
+        <Node name="a node" click={this.nodeClicked} val={this.state.value} updateVal={this.updateVal.bind(this)} />
+      </svg>
     );
   }
+
 }
 
 export default App;
