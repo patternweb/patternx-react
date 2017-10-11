@@ -1,57 +1,23 @@
-import React, { Component } from 'react';
-import Node from "./components/Node"
-import get from 'lodash/get'
-
-const Nodes = {
-  THREE: {
-    Color: {
-      name: "Color",
-      inports: [
-        {
-          "name": "r",
-          "type": "number"
-        },
-        {
-          "name": "g",
-          "type": "number"
-        },
-        {
-          "name": "b",
-          "type": "number"
-        }
-      ],
-      outports: [
-        {
-          "name": "Color",
-          "type": "Color"
-        }
-      ]
-    }
-  }
-}
-
-// {
-//   component: "THREE.Color",
-//   id: "color0",
-//   x: 400,
-//   y: 400
-// }
+import React, { Component } from "react";
+import Libs from "./Libs";
+import Node from "./components/Node";
+import Edge from "./components/Edge";
+import get from "lodash/get";
 
 class Graph extends Component {
-
   state = {
     nodes: [],
     edges: []
-  }
+  };
 
   constructor(props) {
-    super(props)
-    this.activeNodeId = undefined
+    super(props);
+    this.activeNodeId = undefined;
   }
 
   nodeClicked(event) {
     event.stopPropagation();
-    console.log('node clicked')
+    console.log("node clicked");
   }
 
   inportClicked(inport, processId) {
@@ -59,63 +25,87 @@ class Graph extends Component {
   }
 
   outportClicked(outport, processId) {
-    console.log({outport, processId})
+    console.log({ outport, processId });
+    // const activeEdge = <Edge fromX={100} toX={100} fromY={100} toY={100} />
+    // this.setState({...this.state, activeEdge})
   }
 
   handleMouseMove(event) {
     if (this.activeNodeId) {
-      const { pageX, pageY } = event
-      this.setState( prevState => {
-        const node = prevState.nodes.find(node => node.id === this.activeNodeId)
-        node.x = pageX
-        node.y = pageY
-        return prevState
-      })
+      const { pageX, pageY } = event;
+      this.setState(prevState => {
+        const node = prevState.nodes.find(
+          node => node.id === this.activeNodeId
+        );
+        node.x = pageX;
+        node.y = pageY;
+        return prevState;
+      });
     }
   }
 
   svgClick(event) {
     const node = {
       id: `color-${Math.floor(10000 * Math.random())}`,
-      component: "THREE.Color",
+      component: Math.random() > 0.5 ? "THREE.Color" : "CORE.Array",
       x: event.pageX,
       y: event.pageY
-    }
+    };
     this.setState(prevState => {
-      prevState.nodes = prevState.nodes.concat(node)
-      return prevState
-    })
+      prevState.nodes = prevState.nodes.concat(node);
+      return prevState;
+    });
   }
 
   setActiveNode(nodeId) {
-    this.activeNodeId = nodeId
+    this.activeNodeId = nodeId;
+    // push node to end of state.nodes to put it on top of other nodes (z-index) before dragging
+    this.setState(prevState => {
+      prevState.nodes.push(
+        prevState.nodes.splice(
+          prevState.nodes.findIndex(node => node.id === this.activeNodeId),
+          1
+        )[0]
+      );
+      return prevState;
+    });
   }
 
   handleMouseUp(event) {
-    this.activeNodeId = undefined
+    this.activeNodeId = undefined;
   }
 
   buildNode(node, index) {
-    return <Node
-      id={node.id}
-      x={node.x}
-      y={node.y}
-      key={node.id}
-      component={get(Nodes, node.component)}
-      inportClicked={this.inportClicked}
-      outportClicked={this.outportClicked}
-      click={this.nodeClicked}
-      setActiveNode={this.setActiveNode.bind(this)} />
+    return (
+      <Node
+        id={node.id}
+        x={node.x}
+        y={node.y}
+        key={node.id}
+        component={get(Libs, node.component)}
+        inportClicked={this.inportClicked}
+        outportClicked={this.outportClicked.bind(this)}
+        click={this.nodeClicked}
+        setActiveNode={this.setActiveNode.bind(this)}
+      />
+    );
   }
 
   render() {
     return (
-      <svg id="graph" onDoubleClick={this.svgClick.bind(this)} onMouseUp={this.handleMouseUp.bind(this)} onMouseMove={this.handleMouseMove.bind(this)}>
+      <svg
+        id="graph"
+        onDoubleClick={this.svgClick.bind(this)}
+        onMouseUp={this.handleMouseUp.bind(this)}
+        onMouseMove={this.handleMouseMove.bind(this)}
+      >
+        <g id="edges">
+          <Edge fromX={100} fromY={200} toX={500} toY={700} />
+        </g>
         <g id="nodes">{this.state.nodes.map(this.buildNode.bind(this))}</g>
       </svg>
     );
   }
-
 }
 
 export default Graph;

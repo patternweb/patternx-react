@@ -31,6 +31,11 @@ g.node g.outports text {
   text-anchor: end;
 }
 
+g.node g.inports text,
+g.node g.outports text {
+  font-size: 12px;
+}
+
 g.node text {
   fill: red;
   cursor: pointer;
@@ -51,4 +56,11 @@ g.node rect {
   stroke: #AAA;
   rx: 5;
   ry: 5;
+}
+
+path.edge {
+  stroke: black;
+  stroke-linejoin: round;
+  stroke-width: 5;
+  fill: none;
 }
