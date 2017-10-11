@@ -40,19 +40,38 @@ const Nodes = {
 class Graph extends Component {
 
   state = {
-    nodes: []
+    nodes: [],
+    edges: []
+  }
+
+  constructor(props) {
+    super(props)
+    this.activeNodeId = undefined
   }
 
   nodeClicked(event) {
     event.stopPropagation();
+    console.log('node clicked')
   }
 
   inportClicked(inport, processId) {
-    console.log({inport, processId})
+    // console.log({inport, processId})
   }
 
   outportClicked(outport, processId) {
     console.log({outport, processId})
+  }
+
+  handleMouseMove(event) {
+    if (this.activeNodeId) {
+      const { pageX, pageY } = event
+      this.setState( prevState => {
+        const node = prevState.nodes.find(node => node.id === this.activeNodeId)
+        node.x = pageX
+        node.y = pageY
+        return prevState
+      })
+    }
   }
 
   svgClick(event) {
@@ -62,16 +81,36 @@ class Graph extends Component {
       x: event.pageX,
       y: event.pageY
     }
-    this.setState({nodes: [...this.state.nodes, node] })
+    this.setState(prevState => {
+      prevState.nodes = prevState.nodes.concat(node)
+      return prevState
+    })
+  }
+
+  setActiveNode(nodeId) {
+    this.activeNodeId = nodeId
+  }
+
+  handleMouseUp(event) {
+    this.activeNodeId = undefined
   }
 
   buildNode(node, index) {
-    return <Node component={get(Nodes, node.component)} process={node} click={this.nodeClicked} key={node.id} inportClicked={this.inportClicked} outportClicked={this.outportClicked} />
+    return <Node
+      id={node.id}
+      x={node.x}
+      y={node.y}
+      key={node.id}
+      component={get(Nodes, node.component)}
+      inportClicked={this.inportClicked}
+      outportClicked={this.outportClicked}
+      click={this.nodeClicked}
+      setActiveNode={this.setActiveNode.bind(this)} />
   }
 
   render() {
     return (
-      <svg id="graph" onDoubleClick={this.svgClick.bind(this)}>
+      <svg id="graph" onDoubleClick={this.svgClick.bind(this)} onMouseUp={this.handleMouseUp.bind(this)} onMouseMove={this.handleMouseMove.bind(this)}>
         <g id="nodes">{this.state.nodes.map(this.buildNode.bind(this))}</g>
       </svg>
     );

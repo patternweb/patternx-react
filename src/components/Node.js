@@ -8,18 +8,29 @@ const portParams = (port, index, processId) => ({ y: (index+1) * 20, name: port.
 class Node extends Component {
 
   buildInport(port, index) {
-    return <Port {...portParams(port, index, this.props.process.id)} key={ [port.name, this.props.process.id].join(">") } clickFn={this.props.inportClicked} />
+    return <Port {...portParams(port, index, this.props.id)} key={ [port.name, this.props.id].join(">") } clickFn={this.props.inportClicked} />
   }
 
   buildOutport(port, index) {
-    return <Port {...portParams(port, index, this.props.process.id)} key={ [this.props.process.id, port.name].join(">") } clickFn={this.props.outportClicked} />
+    return <Port {...portParams(port, index, this.props.id)} key={ [this.props.id, port.name].join(">") } clickFn={this.props.outportClicked} />
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (
+      (this.props.x !== nextProps.x) ||
+      (this.props.y !== nextProps.y)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   render() {
     const { name, inports, outports } = this.props.component;
-    const { id, x, y } = this.props.process;
+    const { id, x, y } = this.props;
     return (
-      <g id={id} className="node" onClick={this.props.click} transform={`translate(${x},${y})`}>
+      <g id={id} className="node" onMouseDown={() => this.props.setActiveNode(id) } onClick={this.props.click} transform={`translate(${x},${y})`}>
         <rect width={width} height={height} x={-width/2} y={-height/2} />
         <text className="name" y={-height/2+20}>{name}</text>
         <g className="inports" transform={`translate(${-width/2},${-height/2+30})`}>{inports.map(this.buildInport.bind(this))}</g>
