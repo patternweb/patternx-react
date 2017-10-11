@@ -13,6 +13,7 @@ class Graph extends Component {
   constructor(props) {
     super(props);
     this.activeNodeId = undefined;
+    this.dragOffset = undefined;
   }
 
   nodeClicked(event) {
@@ -37,8 +38,8 @@ class Graph extends Component {
         const node = prevState.nodes.find(
           node => node.id === this.activeNodeId
         );
-        node.x = pageX;
-        node.y = pageY;
+        node.x = pageX - this.dragOffset.x;
+        node.y = pageY - this.dragOffset.y;
         return prevState;
       });
     }
@@ -57,7 +58,16 @@ class Graph extends Component {
     });
   }
 
-  setActiveNode(nodeId) {
+  setActiveNode(event) {
+    const nodeId = event.currentTarget.id;
+
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    this.dragOffset = {
+      x: event.pageX - (rect.x + rect.width / 2),
+      y: event.pageY - (rect.y + rect.height / 2)
+    };
+
     this.activeNodeId = nodeId;
     // push node to end of state.nodes to put it on top of other nodes (z-index) before dragging
     this.setState(prevState => {
@@ -73,6 +83,7 @@ class Graph extends Component {
 
   handleMouseUp(event) {
     this.activeNodeId = undefined;
+    this.dragOffset = undefined;
   }
 
   buildNode(node, index) {

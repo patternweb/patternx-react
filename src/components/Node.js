@@ -46,7 +46,8 @@ class Node extends Component {
       <g
         id={id}
         className="node"
-        onMouseDown={() => this.props.setActiveNode(id)}
+        // onMouseDown={() => this.props.setActiveNode(id)}
+        onMouseDown={this.props.setActiveNode}
         onClick={this.props.click}
         transform={`translate(${x},${y})`}
       >
