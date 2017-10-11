@@ -30,28 +30,34 @@ const Nodes = {
   }
 }
 
-class App extends Component {
+// {
+//   component: "THREE.Color",
+//   id: "color0",
+//   x: 400,
+//   y: 400
+// }
+
+class Graph extends Component {
 
   state = {
-    value: 10,
-    nodes: [
-      {
-        process: 0,
-        component: "THREE.Color",
-        x: 400,
-        y: 400
-      }
-    ]
+    nodes: []
   }
 
   nodeClicked(event) {
     event.stopPropagation();
-    // console.log(event.target)
+  }
+
+  inportClicked(inport, processId) {
+    console.log({inport, processId})
+  }
+
+  outportClicked(outport, processId) {
+    console.log({outport, processId})
   }
 
   svgClick(event) {
     const node = {
-      process: Math.random(),
+      id: `color-${Math.floor(10000 * Math.random())}`,
       component: "THREE.Color",
       x: event.pageX,
       y: event.pageY
@@ -59,13 +65,8 @@ class App extends Component {
     this.setState({nodes: [...this.state.nodes, node] })
   }
 
-  updateVal(event) {
-    // console.log("updating", event.target.value)
-    this.setState({value: event.target.value})
-  }
-
   buildNode(node, index) {
-    return <Node component={get(Nodes, node.component)} process={node} click={this.nodeClicked} key={node.process} />
+    return <Node component={get(Nodes, node.component)} process={node} click={this.nodeClicked} key={node.id} inportClicked={this.inportClicked} outportClicked={this.outportClicked} />
   }
 
   render() {
@@ -78,4 +79,4 @@ class App extends Component {
 
 }
 
-export default App;
+export default Graph;
