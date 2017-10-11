@@ -23,6 +23,10 @@ svg#graph {
   height: 100%;
 }
 
+text {
+  user-select: none;
+}
+
 g.node text.name {
   text-anchor: middle;
 }
@@ -39,7 +43,6 @@ g.node g.outports text {
 g.node text {
   fill: red;
   cursor: pointer;
-  user-select: none;
 }
 
 g.node text.name {
