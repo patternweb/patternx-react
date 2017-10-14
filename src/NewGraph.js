@@ -54,7 +54,14 @@ class NewGraph extends React.Component {
       <svg id="graph">
         {Object.keys(this.state).map(key => {
           const SpecificNode = nodeTypes[this.state[key].node];
-          return <SpecificNode key={key} id={key} />;
+          return (
+            <SpecificNode
+              key={key}
+              id={key}
+              state={this.state[key]}
+              updateState={this.updateState(key).bind(this)}
+            />
+          );
         })}
       </svg>
     );

@@ -3,23 +3,19 @@ import React from "react";
 const NodeHOC = InnerComponent => {
   return class extends React.Component {
     handleChange = (key, fn = () => {}) => event => {
-      // gross but a necessary evil, for now
-      this._reactInternalFiber._debugOwner.stateNode.updateState(
-        this.props.id
-      )({
+      this.props.updateState({
         ...this.props.state,
         [key]: fn(event.currentTarget.value)
       });
     };
 
     render() {
-      const _state = this._reactInternalFiber._debugOwner.stateNode.state[
-        this.props.id
-      ];
-      const state = _state && _state.state ? _state.state : {};
-      const inputs = _state && _state.inputs ? _state.inputs : { value: [] };
-      const x = _state && _state.x ? _state.x : 0;
-      const y = _state && _state.y ? _state.y : 0;
+      const {
+        state = {},
+        inputs = { value: [] },
+        x = 0,
+        y = 0
+      } = this.props.state;
 
       return (
         <foreignObject width={400} height={400} x={x} y={y}>
@@ -28,9 +24,7 @@ const NodeHOC = InnerComponent => {
             {...this.props}
             state={state}
             inputs={inputs}
-            updateState={this._reactInternalFiber._debugOwner.stateNode.updateState(
-              this.props.id
-            )}
+            updateState={this.props.updateState}
             handleChange={this.handleChange.bind(this)}
           />
         </foreignObject>
