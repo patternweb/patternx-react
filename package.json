@@ -5,10 +5,14 @@
   "private": true,
   "dependencies": {
     "github-api": "^3.0.0",
+    "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
+    "most": "^1.7.2",
+    "most-w3msg": "^2.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-scripts": "1.0.14"
+    "react-scripts": "1.0.14",
+    "ws": "^3.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

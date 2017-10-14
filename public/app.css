@@ -16,6 +16,25 @@ body {
   overflow: hidden;
 }
 
+foreignObject {
+  font-size: 10px;
+}
+
+ul {
+  background: #111;
+  color: #CCC;
+  border-radius: 0 0 4px 4px;
+  max-height: 300px;
+  overflow: auto;
+}
+li {
+  padding: 2px;
+  border-bottom: 1px solid #444;
+}
+ul li:last-child {
+  border: none;
+}
+
 svg#graph {
   background: #CCC;
   display: block;
