@@ -16,7 +16,7 @@ class BufferNode extends Component {
   };
 
   componentDidMount() {
-    const socket = new WebSocket("ws://labs.patternx.cc:5555");
+    const socket = new WebSocket("wss://tweetstorm.patternx.cc");
     const ws$ = fromWebSocket(socket, socket.close.bind(socket));
     const nextWindow = (slidingWindow, x) =>
       slidingWindow.concat(x.data).slice(-this.props.state.bufferLimit);
