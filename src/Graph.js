@@ -10,14 +10,20 @@ class Graph extends React.Component {
   constructor(props) {
     super(props);
     bindAll(this, [
-      "handleMouseUp",
-      "handleMouseMove",
+      "addEdge",
       "addRandomNode",
-      "updateState",
-      "setActiveNode",
+      "handleClick",
+      "handleDoubleClick",
+      "handleMouseMove",
+      "handleMouseUp",
       "inportClicked",
-      "outportClicked"
+      "outportClicked",
+      "resetActiveEdge",
+      "setActiveNode",
+      "updateState"
     ]);
+
+    this.resetActiveEdge();
   }
 
   updateState = key => input => {
@@ -37,8 +43,18 @@ class Graph extends React.Component {
     });
   }
 
+  handleClick(event) {
+    if (event.target === this.refs.svg) this.resetActiveEdge();
+  }
+
   handleMouseUp(event) {
     this.activeNodeId = undefined;
+  }
+
+  handleDoubleClick(event) {
+    if (event.target === this.refs.svg) {
+      this.addRandomNode(event);
+    }
   }
 
   setActiveNode(event) {
@@ -74,12 +90,30 @@ class Graph extends React.Component {
     this.addNode(randomName(), "Log", event.pageX, event.pageY);
   }
 
+  resetActiveEdge() {
+    this.activeEdge = {
+      from: undefined,
+      to: undefined
+    };
+  }
+
+  addEdge(edgeProperties) {
+    console.log("ADDING EDGE", edgeProperties);
+    this.resetActiveEdge();
+  }
+
   inportClicked(inport, processId) {
     console.log({ inport, processId });
+    this.activeEdge.to = { port: inport, processId };
+
+    if (this.activeEdge.from) this.addEdge(this.activeEdge);
   }
 
   outportClicked(outport, processId, port) {
     console.log({ outport, processId, port });
+    this.activeEdge.from = { port: outport, processId };
+
+    if (this.activeEdge.to) this.addEdge(this.activeEdge);
     // const rect = port.getBoundingClientRect();
     // this.setState({
     //   ...this.state,
@@ -96,8 +130,10 @@ class Graph extends React.Component {
         id="graph"
         onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}
-        onDoubleClick={this.addRandomNode}
+        onClick={this.handleClick}
+        onDoubleClick={this.handleDoubleClick}
         xmlns="http://www.w3.org/2000/svg"
+        ref="svg"
       >
         {Object.keys(this.state).map(key => {
           const SpecificNode = nodes[this.state[key].component].node;
