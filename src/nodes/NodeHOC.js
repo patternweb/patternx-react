@@ -1,5 +1,5 @@
 import React from "react";
-import Port from "../components/Port";
+import Port from "./Port";
 
 const portParams = (port, index, processId) => ({
   y: (index + 1) * 20,
