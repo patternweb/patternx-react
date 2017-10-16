@@ -60,6 +60,22 @@ class Graph extends React.Component {
     this.addNode(randomName(), "Log", event.pageX, event.pageY);
   }
 
+  inportClicked(inport, processId) {
+    console.log({ inport, processId });
+  }
+
+  outportClicked(outport, processId, port) {
+    console.log({ outport, processId, port });
+    // const rect = port.getBoundingClientRect();
+    // this.setState({
+    //   ...this.state,
+    //   fromX: rect.x + rect.width,
+    //   fromY: rect.y + rect.height / 2
+    // });
+    // const activeEdge = <Edge fromX={100} toX={100} fromY={100} toY={100} />
+    // this.setState({...this.state, activeEdge})
+  }
+
   render() {
     return (
       <svg
@@ -82,6 +98,8 @@ class Graph extends React.Component {
               input={this.state[key].input}
               updateState={this.updateState(key).bind(this)}
               setActiveNode={this.setActiveNode.bind(this)}
+              inportClicked={this.inportClicked.bind(this)}
+              outportClicked={this.outportClicked.bind(this)}
             />
           );
         })}

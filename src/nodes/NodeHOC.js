@@ -15,14 +15,24 @@ const NodeHOC = InnerComponent => {
     buildOutport(port, index) {
       const id = [this.props.id, port].join(">");
       return (
-        <Port {...portParams(port, index, this.props.id)} key={id} id={id} />
+        <Port
+          {...portParams(port, index, this.props.id)}
+          key={id}
+          id={id}
+          clickFn={this.props.outportClicked}
+        />
       );
     }
 
     buildInport(port, index) {
       const id = [port, this.props.id].join("<");
       return (
-        <Port {...portParams(port, index, this.props.id)} key={id} id={id} />
+        <Port
+          {...portParams(port, index, this.props.id)}
+          key={id}
+          id={id}
+          clickFn={this.props.inportClicked}
+        />
       );
     }
 
