@@ -4,6 +4,7 @@ import exampleState from "./graphs/new";
 import { randomName } from "./utils";
 import bindAll from "lodash/bindAll";
 import SignalGraph from "./signals/index";
+import SVGPZ from "svg-pan-zoom";
 
 class Graph extends React.Component {
   state = {};
@@ -40,6 +41,21 @@ class Graph extends React.Component {
       const node = exampleState[key];
       this.addNode(key, node.component, node.x, node.y, node.state, node.input);
     }
+
+    setTimeout(() => {
+      this.panZoom = SVGPZ("#graph", {
+        zoomEnabled: true,
+        panEnabled: false,
+        controlIconsEnabled: true,
+        fit: false,
+        center: false,
+        preventMouseEventsDefault: false,
+        zoomScaleSensitivity: 0.3,
+        dblClickZoomEnabled: false,
+        maxZoom: 1,
+        minZoom: 0.1
+      });
+    }, 10);
   }
 
   updateState = key => input => {
