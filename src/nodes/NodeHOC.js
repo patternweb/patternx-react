@@ -71,15 +71,13 @@ const NodeHOC = InnerComponent => {
             </g>
           </g>
           <foreignObject width={width} height={200} x={x - width / 2} y={y}>
-            <body xmlns="http://www.w3.org/1999/xhtml">
-              <InnerComponent
-                {...this.props}
-                state={state}
-                input={input}
-                updateState={this.props.updateState}
-                handleChange={this.handleChange.bind(this)}
-              />
-            </body>
+            <InnerComponent
+              {...this.props}
+              state={state}
+              input={input}
+              updateState={this.props.updateState}
+              handleChange={this.handleChange.bind(this)}
+            />
           </foreignObject>
         </g>
       );

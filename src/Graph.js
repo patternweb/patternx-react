@@ -1,6 +1,6 @@
 import React from "react";
 import nodes from "./nodes";
-import exampleState from "./graphs/example";
+import exampleState from "./graphs/new";
 
 class Graph extends React.Component {
   state = exampleState;
@@ -13,19 +13,17 @@ class Graph extends React.Component {
   };
 
   handleMouseMove(event) {
-    if (this.activeNodeId) {
-      const { pageX, pageY } = event;
-      this.setState(prevState => {
-        prevState[this.activeNodeId].x = pageX - this.dragOffset.x;
-        prevState[this.activeNodeId].y = pageY - this.dragOffset.y;
-        return prevState;
-      });
-    }
+    if (!this.activeNodeId) return;
+    const { pageX, pageY } = event;
+    this.setState(prevState => {
+      prevState[this.activeNodeId].x = pageX - this.dragOffset.x;
+      prevState[this.activeNodeId].y = pageY - this.dragOffset.y;
+      return prevState;
+    });
   }
 
   handleMouseUp(event) {
     this.activeNodeId = undefined;
-    this.dragOffset = undefined;
   }
 
   setActiveNode(event) {

@@ -21,7 +21,7 @@ class BufferNode extends Component {
   };
 
   componentDidMount() {
-    // combineArray(implementation, [this.props.inputs.stream, just(10)])
+    combineArray(implementation, [this.props.inputs.stream, just(10)]);
     // implementation(this.props.inputs.stream, this.props.state.bufferSize).observe(
     //   array => this.setState({ items: array })
     // )

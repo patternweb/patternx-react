@@ -4,6 +4,7 @@ import * as NumberSliderNode from "./NumberSliderNode";
 import * as NumberNode from "./NumberNode";
 import * as CanvasNode from "./CanvasNode";
 import * as PolygonNode from "./svg/PolygonNode";
+import * as LogNode from "./LogNode";
 
 const nodes = {
   WebSocket: {
@@ -27,6 +28,12 @@ const nodes = {
     node: NumberSliderNode.default,
     outports: {
       value: "Number"
+    }
+  },
+  Log: {
+    node: LogNode.default,
+    inports: {
+      value: "Any"
     }
   },
   Canvas: {
