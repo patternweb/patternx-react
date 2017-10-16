@@ -1,6 +1,7 @@
 import React from "react";
 import nodes from "./nodes";
 import exampleState from "./graphs/new";
+import { randomName } from "./utils";
 
 class Graph extends React.Component {
   state = exampleState;
@@ -35,12 +36,37 @@ class Graph extends React.Component {
     this.activeNodeId = event.currentTarget.id;
   }
 
+  addNode(id, component, x, y, state = undefined, input = undefined) {
+    this.setState(prevState => {
+      prevState[id] = {
+        x,
+        y,
+        component
+      };
+      if (state) prevState[id].state = state;
+      if (input) prevState[id].input = input;
+      return prevState;
+    });
+  }
+
+  removeNode(id) {
+    this.setState(prevState => {
+      delete prevState[id];
+      return prevState;
+    });
+  }
+
+  addRandomNode(event) {
+    this.addNode(randomName(), "Log", event.pageX, event.pageY);
+  }
+
   render() {
     return (
       <svg
         id="graph"
         onMouseUp={this.handleMouseUp.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
+        onDoubleClick={this.addRandomNode.bind(this)}
         xmlns="http://www.w3.org/2000/svg"
       >
         {Object.keys(this.state).map(key => {
