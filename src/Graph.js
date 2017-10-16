@@ -2,9 +2,23 @@ import React from "react";
 import nodes from "./nodes";
 import exampleState from "./graphs/new";
 import { randomName } from "./utils";
+import bindAll from "lodash/bindAll";
 
 class Graph extends React.Component {
   state = exampleState;
+
+  constructor(props) {
+    super(props);
+    bindAll(this, [
+      "handleMouseUp",
+      "handleMouseMove",
+      "addRandomNode",
+      "updateState",
+      "setActiveNode",
+      "inportClicked",
+      "outportClicked"
+    ]);
+  }
 
   updateState = key => input => {
     this.setState(prevState => {
@@ -80,9 +94,9 @@ class Graph extends React.Component {
     return (
       <svg
         id="graph"
-        onMouseUp={this.handleMouseUp.bind(this)}
-        onMouseMove={this.handleMouseMove.bind(this)}
-        onDoubleClick={this.addRandomNode.bind(this)}
+        onMouseUp={this.handleMouseUp}
+        onMouseMove={this.handleMouseMove}
+        onDoubleClick={this.addRandomNode}
         xmlns="http://www.w3.org/2000/svg"
       >
         {Object.keys(this.state).map(key => {
@@ -96,10 +110,10 @@ class Graph extends React.Component {
               y={this.state[key].y}
               state={this.state[key].state}
               input={this.state[key].input}
-              updateState={this.updateState(key).bind(this)}
-              setActiveNode={this.setActiveNode.bind(this)}
-              inportClicked={this.inportClicked.bind(this)}
-              outportClicked={this.outportClicked.bind(this)}
+              updateState={this.updateState(key)}
+              setActiveNode={this.setActiveNode}
+              inportClicked={this.inportClicked}
+              outportClicked={this.outportClicked}
             />
           );
         })}
