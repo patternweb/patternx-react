@@ -1,48 +1,39 @@
-import { fromWebSocket } from "most-w3msg";
+import { just, combineArray } from "most";
 import React, { Component } from "react";
 import NodeHOC from "./NodeHOC";
-// const WebSocket = require('ws')
+
+function implementation(socket$, bufferSize) {
+  const nextWindow = (slidingWindow, x) =>
+    slidingWindow.concat(x.data).slice(-bufferSize);
+  return socket$.scan(nextWindow, []);
+  // ws$.throttle(1000).scan(nextWindow, []).observe(array => this.setState({items: array}))
+}
 
 class BufferNode extends Component {
   static defaultProps = {
-    state: {
-      bufferLimit: 10
+    input: {
+      bufferSize: 10
     }
   };
 
   state = {
-    // bufferLimit: 10,
     items: []
   };
 
   componentDidMount() {
-    const socket = new WebSocket("wss://tweetstorm.patternx.cc");
-    const ws$ = fromWebSocket(socket, socket.close.bind(socket));
-    const nextWindow = (slidingWindow, x) =>
-      slidingWindow.concat(x.data).slice(-this.props.state.bufferLimit);
-    ws$.scan(nextWindow, []).observe(array => this.setState({ items: array }));
-    // ws$.throttle(1000).scan(nextWindow, []).observe(array => this.setState({items: array}))
-  }
-
-  setBufferLimit(event) {
-    this.setState({ bufferLimit: event.currentTarget.value });
+    // combineArray(implementation, [this.props.inputs.stream, just(10)])
+    // implementation(this.props.inputs.stream, this.props.state.bufferSize).observe(
+    //   array => this.setState({ items: array })
+    // )
   }
 
   render() {
-    const { bufferLimit } = this.props.state;
-    const { handleChange } = this.props;
+    const { bufferSize } = this.props.input;
     return (
       <div>
         <p>
-          buffer: {this.state.items.length}/{bufferLimit}
+          buffer: {this.state.items.length}/{bufferSize}
         </p>
-        <input
-          type="range"
-          min={1}
-          max={30}
-          value={bufferLimit}
-          onChange={handleChange("bufferLimit", parseInt)}
-        />
         <ul>
           {this.state.items
             .slice(0)
@@ -52,7 +43,6 @@ class BufferNode extends Component {
       </div>
     );
   }
-  //onChange={this.setBufferLimit.bind(this)} />
 }
 
 export default NodeHOC(BufferNode);
