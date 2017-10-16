@@ -2,15 +2,12 @@ import React from "react";
 import nodes from "./nodes";
 import exampleState from "./graphs/example"
 
-class NewGraph extends React.Component {
+class Graph extends React.Component {
   state = exampleState;
 
   updateState = key => input => {
     this.setState(prevState => {
       prevState[key].state = Object.assign({}, prevState[key].state, input);
-      // ...this.state[key].state
-      // [key]: input
-      // console.log(JSON.stringify(prevState))
       return prevState;
     });
   };
@@ -81,4 +78,4 @@ class NewGraph extends React.Component {
   }
 }
 
-export default NewGraph;
+export default Graph;

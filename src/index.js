@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import NewGraph from "./NewGraph";
+import Graph from "./Graph";
 import registerServiceWorker from "./registerServiceWorker";
 
-ReactDOM.render(<NewGraph />, document.getElementById("root"));
+ReactDOM.render(<Graph />, document.getElementById("root"));
 
 registerServiceWorker();
