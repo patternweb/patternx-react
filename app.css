@@ -18,6 +18,11 @@ body {
 
 foreignObject {
   font-size: 10px;
+  position: fixed;
+}
+
+canvas {
+  pointer-events: none;
 }
 
 ul {
@@ -36,10 +41,15 @@ ul li:last-child {
 }
 
 svg#graph {
-  background: #CCC;
+  background: #111;
   display: block;
   width: 100%;
   height: 100%;
+  user-select: none;
+}
+
+canvas {
+  display: inline-block;
 }
 
 text {
@@ -64,18 +74,37 @@ g.node text {
   cursor: pointer;
 }
 
+foreignObject {
+  padding: 0 10px;
+}
+foreignObject div {
+  margin-bottom: 4px;
+}
+foreignObject input[type=text],
+foreignObject input[type=number],
+foreignObject textarea {
+  margin-left: 10px;
+  background: #333;
+  color: #CCC;
+  border: none;
+  padding: 2px;
+}
+foreignObject input[disabled] {
+  color: #888;
+}
+
 g.node text.name {
   fill: black;
   font-weight: bold;
 }
 
 g.node text:hover {
-  fill: black;
+  fill: yellow;
 }
 
 g.node rect {
-  fill: #FFF;
-  stroke: #AAA;
+  fill: #555;
+  stroke: #444;
   rx: 5;
   ry: 5;
 }
