@@ -12,8 +12,8 @@ const nodes = {
     node: AddNode.default,
     implementation: AddNode.implementation,
     inports: {
-      a: "Number",
-      b: "Number"
+      x: "Number",
+      y: "Number"
     },
     outports: {
       result: "Number"
