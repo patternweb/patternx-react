@@ -1,5 +1,5 @@
 import * as React from "react";
-import NodeHOC from "./NodeHOC";
+import NodeHOC from "../NodeHOC";
 
 class NumberNode extends React.Component {
   static defaultProps = {

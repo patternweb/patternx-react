@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import NodeHOC from "./NodeHOC";
+import NodeHOC from "../NodeHOC";
 // const WebSocket = require('ws')
 
 class CanvasNode extends Component {

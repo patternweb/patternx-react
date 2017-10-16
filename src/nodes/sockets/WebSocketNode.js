@@ -1,7 +1,7 @@
 import { from } from "most";
 import { fromWebSocket } from "most-w3msg";
 import React, { Component } from "react";
-import NodeHOC from "./NodeHOC";
+import NodeHOC from "../NodeHOC";
 // const WebSocket = require('ws')
 
 export function implementation(url = undefined) {

@@ -1,10 +1,10 @@
-import * as BufferNode from "./BufferNode";
-import * as WebSocketNode from "./WebSocketNode";
-import * as NumberSliderNode from "./NumberSliderNode";
-import * as NumberNode from "./NumberNode";
-import * as CanvasNode from "./CanvasNode";
+import * as BufferNode from "./sockets/BufferNode";
+import * as WebSocketNode from "./sockets/WebSocketNode";
+import * as NumberSliderNode from "./core/NumberSliderNode";
+import * as NumberNode from "./core/NumberNode";
+import * as LogNode from "./core/LogNode";
+import * as CanvasNode from "./graphics/CanvasNode";
 import * as PolygonNode from "./svg/PolygonNode";
-import * as LogNode from "./LogNode";
 
 const nodes = {
   WebSocket: {

@@ -1,6 +1,6 @@
 import { just, combineArray } from "most";
 import React, { Component } from "react";
-import NodeHOC from "./NodeHOC";
+import NodeHOC from "../NodeHOC";
 
 function implementation(socket$, bufferSize) {
   const nextWindow = (slidingWindow, x) =>
