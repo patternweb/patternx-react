@@ -52,6 +52,6 @@ const state = {
     y: 800,
     component: "Polygon"
   }
-}
+};
 
 export default state;

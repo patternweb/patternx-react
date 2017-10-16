@@ -1,6 +1,6 @@
 import React from "react";
 import nodes from "./nodes";
-import exampleState from "./graphs/example"
+import exampleState from "./graphs/example";
 
 class Graph extends React.Component {
   state = exampleState;
