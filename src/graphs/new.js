@@ -1,13 +1,24 @@
 const state = {
-  slider: {
+  slider1: {
     x: 200,
-    y: 250,
+    y: 150,
     component: "NumberSlider",
     state: {
-      value: -11,
+      value: 3,
       min: -20,
       max: 20,
-      step: 0.1
+      step: 1
+    }
+  },
+  slider2: {
+    x: 200,
+    y: 400,
+    component: "NumberSlider",
+    state: {
+      value: 10,
+      min: -10,
+      max: 10,
+      step: 2
     }
   },
   add: {
@@ -15,8 +26,8 @@ const state = {
     y: 300,
     component: "Add",
     input: {
-      a: "$slider",
-      b: 2
+      a: "$slider1",
+      b: "$slider2"
     }
   }
 };

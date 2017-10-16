@@ -1,6 +1,10 @@
 import * as React from "react";
 import NodeHOC from "../NodeHOC";
 
+export function implementation(value) {
+  return value;
+}
+
 class NumberSliderNode extends React.Component {
   static defaultProps = {
     state: {
