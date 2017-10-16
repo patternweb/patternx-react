@@ -10,12 +10,13 @@ const state = {
       step: 0.1
     }
   },
-  log: {
+  add: {
     x: 700,
     y: 300,
-    component: "Log",
+    component: "Add",
     input: {
-      value: "hello world"
+      a: "$slider",
+      b: 2
     }
   }
 };

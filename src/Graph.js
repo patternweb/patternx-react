@@ -3,6 +3,7 @@ import nodes from "./nodes";
 import exampleState from "./graphs/new";
 import { randomName } from "./utils";
 import bindAll from "lodash/bindAll";
+import SignalGraph from "./signals/index";
 
 class Graph extends React.Component {
   state = exampleState;

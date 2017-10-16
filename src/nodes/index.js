@@ -5,8 +5,20 @@ import * as NumberNode from "./core/NumberNode";
 import * as LogNode from "./core/LogNode";
 import * as CanvasNode from "./graphics/CanvasNode";
 import * as PolygonNode from "./svg/PolygonNode";
+import * as AddNode from "./math/AddNode";
 
 const nodes = {
+  Add: {
+    node: AddNode.default,
+    implementation: AddNode.implementation,
+    inports: {
+      a: "Number",
+      b: "Number"
+    },
+    outports: {
+      result: "Number"
+    }
+  },
   WebSocket: {
     node: WebSocketNode.default,
     implementation: WebSocketNode.implementation,

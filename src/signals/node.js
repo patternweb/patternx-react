@@ -1,6 +1,6 @@
-const chalk = require("chalk");
+import chalk from "chalk";
 
-function Node(id, fn, initialParams = {}, inports = []) {
+export default function Node(id, fn, initialParams = {}, inports = []) {
   try {
     this.isPromise = fn({}) instanceof Promise;
   } catch (e) {
@@ -77,5 +77,3 @@ Node.prototype.run = function(cb) {
     // cb(this.output);
   }
 };
-
-module.exports = Node;
