@@ -5,6 +5,8 @@ export function implementation(a = 0, b = 0) {
   return a + b;
 }
 
+export const fn = o => o.x + o.y;
+
 class AddNode extends React.Component {
   static defaultProps = {
     state: {
@@ -13,8 +15,7 @@ class AddNode extends React.Component {
   };
 
   render() {
-    const { a, b } = this.props.input;
-    return <p>{implementation(a, b)}</p>;
+    return <p>{this.props.value}</p>;
   }
 }
 

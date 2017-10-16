@@ -30,6 +30,10 @@ class Graph extends Component {
     }
   }
 
+  handleContextMenu(event) {
+    console.log('right click')
+  }
+
   nodeClicked(event) {
     event.stopPropagation();
     console.log("node clicked");
@@ -144,6 +148,7 @@ class Graph extends Component {
         onDoubleClick={this.svgClick.bind(this)}
         onMouseUp={this.handleMouseUp.bind(this)}
         onMouseMove={this.handleMouseMove.bind(this)}
+        onContextMenu={this.handleContextMenu.bind(this)}
       >
         <g id="edges" />
         <g id="nodes">{this.state.nodes.map(this.buildNode.bind(this))}</g>

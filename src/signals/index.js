@@ -6,20 +6,21 @@ export default function SignalGraph() {
 
   const nodes = {};
 
-  const addNode = (id, _fn, ob) => {
+  const addNode = (id, fn, ob, inports) => {
     if (nodes[id]) throw Error("Node already exists with that ID");
-    nodes[id] = nodes[id] || new Node(id, _fn.fn, ob, _fn.inports);
-    Object.keys(ob).forEach(key => {
-      nodes[id].listeners.push(
-        signal.filter(payload => "$" + payload[0] === ob[key]).add(payload => {
-          nodes[id].update({ [key]: payload[1] });
-          run(id);
-        })
-      );
-      run(ob[key][1]);
-      // console.log('running', ob[key])
-    });
-    // run(id);
+    nodes[id] = nodes[id] || new Node(id, fn, ob, inports);
+    return nodes[id];
+    // Object.keys(ob).forEach(key => {
+    //   nodes[id].listeners.push(
+    //     signal.filter(payload => "$" + payload[0] === ob[key]).add(payload => {
+    //       nodes[id].update({ [key]: payload[1] });
+    //       run(id);
+    //     })
+    //   );
+    //   run(ob[key][1]);
+    //   // console.log('running', ob[key])
+    // });
+    // // run(id);
   };
 
   function removeNode(id) {
@@ -47,6 +48,7 @@ export default function SignalGraph() {
     removeNode,
     nodes,
     run,
-    update
+    update,
+    signal
   };
 }

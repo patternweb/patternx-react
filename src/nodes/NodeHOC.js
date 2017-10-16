@@ -38,14 +38,19 @@ const NodeHOC = InnerComponent => {
 
     handleChange = (key, fn = val => val) => event => {
       this.props.updateState({
-        ...this.props.state,
+        // ...this.props.state,
         [key]: fn(event.currentTarget.value)
       });
     };
 
     render() {
-      const { state = {}, input = { value: [] }, x = 0, y = 0 } = this.props;
-
+      const {
+        state = {},
+        input = { value: [] },
+        x = 0,
+        y = 0,
+        value
+      } = this.props;
       return (
         <g>
           <g
@@ -87,6 +92,7 @@ const NodeHOC = InnerComponent => {
               input={input}
               updateState={this.props.updateState}
               handleChange={this.handleChange.bind(this)}
+              value={value}
             />
           </foreignObject>
         </g>

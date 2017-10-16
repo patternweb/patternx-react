@@ -11,6 +11,7 @@ const nodes = {
   Add: {
     node: AddNode.default,
     implementation: AddNode.implementation,
+    fn: AddNode.fn,
     inports: {
       x: "Number",
       y: "Number"
@@ -38,8 +39,12 @@ const nodes = {
   },
   NumberSlider: {
     node: NumberSliderNode.default,
+    fn: NumberSliderNode.fn,
     outports: {
       value: "Number"
+    },
+    inports: {
+      value: "Number" // need to remove this
     }
   },
   Log: {

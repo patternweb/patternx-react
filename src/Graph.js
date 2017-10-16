@@ -6,7 +6,7 @@ import bindAll from "lodash/bindAll";
 import SignalGraph from "./signals/index";
 
 class Graph extends React.Component {
-  state = exampleState;
+  state = {};
 
   constructor(props) {
     super(props);
@@ -14,6 +14,7 @@ class Graph extends React.Component {
       "addEdge",
       "addRandomNode",
       "handleClick",
+      "handleContextMenu",
       "handleDoubleClick",
       "handleMouseMove",
       "handleMouseUp",
@@ -25,14 +26,38 @@ class Graph extends React.Component {
     ]);
 
     this.resetActiveEdge();
+    this.signalGraph = SignalGraph();
+  }
+
+  componentDidMount() {
+    this.signalGraph.signal.add(payload => {
+      this.setState(prevState => {
+        prevState[payload[0]].value = payload[1];
+        return prevState;
+      });
+    });
+    for (const key of Object.keys(exampleState)) {
+      const node = exampleState[key];
+      this.addNode(key, node.component, node.x, node.y, node.state, node.input);
+    }
   }
 
   updateState = key => input => {
-    this.setState(prevState => {
-      prevState[key].state = Object.assign({}, prevState[key].state, input);
-      return prevState;
-    });
+    if (input.value) {
+      this.signalGraph.update(key, input);
+    } else {
+      this.setState(prevState => {
+        prevState[key].state = Object.assign({}, prevState[key].state, input);
+        // console.log(key, input)
+        this.signalGraph.update(key, input);
+        return prevState;
+      });
+    }
   };
+
+  handleContextMenu(event) {
+    event.preventDefault();
+  }
 
   handleMouseMove(event) {
     if (!this.activeNodeId) return;
@@ -45,6 +70,7 @@ class Graph extends React.Component {
   }
 
   handleClick(event) {
+    console.log(event);
     if (event.target === this.refs.svg) this.resetActiveEdge();
   }
 
@@ -69,6 +95,28 @@ class Graph extends React.Component {
 
   addNode(id, component, x, y, state = undefined, input = undefined) {
     this.setState(prevState => {
+      // console.log(id, nodes[component].fn, input || {})
+      const ob = input || {};
+      const signalNode = this.signalGraph.addNode(
+        id,
+        nodes[component].fn,
+        ob,
+        Object.keys(nodes[component].inports || {})
+      );
+
+      Object.keys(ob).forEach(key => {
+        signalNode.listeners.push(
+          this.signalGraph.signal
+            .filter(payload => "$" + payload[0] === ob[key])
+            .add(payload => {
+              signalNode.update({ [key]: payload[1] });
+              this.signalGraph.run(id);
+            })
+        );
+        this.signalGraph.run((input || {})[key][1]);
+        // console.log('running', ob[key])
+      });
+
       prevState[id] = {
         x,
         y,
@@ -133,6 +181,7 @@ class Graph extends React.Component {
         onMouseMove={this.handleMouseMove}
         onClick={this.handleClick}
         onDoubleClick={this.handleDoubleClick}
+        onContextMenu={this.handleContextMenu}
         xmlns="http://www.w3.org/2000/svg"
         ref="svg"
       >
@@ -151,6 +200,7 @@ class Graph extends React.Component {
               setActiveNode={this.setActiveNode}
               inportClicked={this.inportClicked}
               outportClicked={this.outportClicked}
+              value={this.state[key].value}
             />
           );
         })}

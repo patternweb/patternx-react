@@ -5,6 +5,8 @@ export function implementation(value) {
   return value;
 }
 
+export const fn = o => o.value;
+
 class NumberSliderNode extends React.Component {
   static defaultProps = {
     state: {
@@ -16,8 +18,8 @@ class NumberSliderNode extends React.Component {
   };
 
   render() {
-    const { min, max, value, step } = this.props.state;
-    const { handleChange } = this.props;
+    const { min, max, step } = this.props.state;
+    const { handleChange, value } = this.props;
     return (
       <div>
         <input

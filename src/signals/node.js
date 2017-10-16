@@ -12,6 +12,8 @@ export default function Node(id, fn, initialParams = {}, inports = []) {
   this.inports = inports;
   this.output = undefined;
   this.listeners = [];
+
+  // console.log(this)
   // this._attachFn = this.generator(this.input)
   // this._attachFn.next()
 }
@@ -25,13 +27,13 @@ export default function Node(id, fn, initialParams = {}, inports = []) {
 Node.prototype._setCalculatedOutput = function(cb, output) {
   this.output = output;
 
-  console.log(
-    chalk.magenta("CALCULATED"),
-    this.id,
-    "=",
-    this.output,
-    this.input
-  );
+  // console.log(
+  //   chalk.magenta("CALCULATED"),
+  //   this.id,
+  //   "=",
+  //   this.output,
+  //   this.input
+  // );
 
   cb(this.output);
 };
@@ -40,7 +42,7 @@ Node.prototype.remove = function() {
   while (this.listeners.length > 0) {
     this.listeners.pop().detach();
   }
-  console.log(chalk.red("REMOVED"), this.id);
+  // console.log(chalk.red("REMOVED"), this.id);
 };
 
 Node.prototype.update = function(params) {
@@ -55,11 +57,12 @@ Node.prototype.update = function(params) {
 
 Node.prototype.run = function(cb) {
   if (this.output) {
-    console.log(chalk.green("CACHED OUTPUT"), this.id);
+    // console.log(chalk.green("CACHED OUTPUT"), this.id);
     cb(this.output);
   } else if (
     this.inports.every(
-      inport => this.input[inport] && this.input[inport][0] !== "$"
+      inport =>
+        this.input[inport] !== undefined && this.input[inport][0] !== "$"
     )
   ) {
     if (this.isPromise) {
@@ -73,7 +76,7 @@ Node.prototype.run = function(cb) {
     // this._attachFn = this.generator(this.input)
     // this._attachFn.next()
   } else {
-    console.log(chalk.yellow("WAITING"), this.id, this.input);
-    // cb(this.output);
+    // console.log(chalk.yellow("WAITING"), this.id, this.input);
+    cb(this.output);
   }
 };
