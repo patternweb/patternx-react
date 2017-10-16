@@ -18,6 +18,11 @@ body {
 
 foreignObject {
   font-size: 10px;
+  position: fixed;
+}
+
+canvas {
+  pointer-events: none;
 }
 
 ul {
@@ -40,6 +45,11 @@ svg#graph {
   display: block;
   width: 100%;
   height: 100%;
+  user-select: none;
+}
+
+canvas {
+  display: inline-block;
 }
 
 text {
