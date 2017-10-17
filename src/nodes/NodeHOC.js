@@ -18,6 +18,11 @@ const NodeHOC = InnerComponent => {
       bindAll(this, ["buildInport", "buildOutport", "handleChange"]);
     }
 
+    componentDidMount() {
+      this.props["addToViewport"](this.refs.g);
+      this.props["addToViewport"](this.refs.foreignObject);
+    }
+
     buildOutport(port, index) {
       const id = [this.props.id, port].join(">");
       return (
@@ -58,7 +63,7 @@ const NodeHOC = InnerComponent => {
         value
       } = this.props;
       return (
-        <g>
+        <g ref="g">
           <g
             id={this.props.id}
             className="node"
@@ -89,7 +94,13 @@ const NodeHOC = InnerComponent => {
               )}
             </g>
           </g>
-          <foreignObject width={width} height={200} x={x - width / 2} y={y}>
+          <foreignObject
+            width={width}
+            height={200}
+            x={x - width / 2}
+            y={y}
+            ref="foreignObject"
+          >
             <InnerComponent
               {...this.props}
               state={state}

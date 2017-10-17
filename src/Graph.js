@@ -30,7 +30,8 @@ class Graph extends React.Component {
       "resetActiveEdge",
       "setActiveNode",
       "updateState",
-      "svgPoint"
+      "svgPoint",
+      "addToViewPort"
     ]);
 
     this.resetActiveEdge();
@@ -47,6 +48,13 @@ class Graph extends React.Component {
       this.svgViewport.getCTM().inverse()
     );
     return [Math.floor(point.x), Math.floor(point.y)];
+  }
+
+  addToViewPort(element) {
+    const parent = document.querySelector(".svg-pan-zoom_viewport");
+    if (parent) {
+      parent.appendChild(element);
+    }
   }
 
   componentDidMount() {
@@ -191,7 +199,8 @@ class Graph extends React.Component {
   }
 
   addRandomNode(event) {
-    this.addNode(randomName(), "Log", event.pageX, event.pageY);
+    const [x, y] = this.svgPoint(event.pageX, event.pageY);
+    this.addNode(randomName(), "NumberSlider", x, y);
   }
 
   resetActiveEdge() {
@@ -257,6 +266,7 @@ class Graph extends React.Component {
               inportClicked={this.inportClicked}
               outportClicked={this.outportClicked}
               value={this.state[key].value}
+              addToViewport={this.addToViewPort}
             />
           );
         })}
