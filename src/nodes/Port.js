@@ -6,7 +6,12 @@ const handlePortClick = (clickFn, name, processId) => event => {
 };
 
 const Port = ({ id, name, type, y, clickFn, processId }) => (
-  <text y={y} id={id} onClick={handlePortClick(clickFn, name, processId)}>
+  <text
+    y={y}
+    id={id}
+    onClick={handlePortClick(clickFn, name, processId)}
+    shape-rendering="cripEdges"
+  >
     {name}
     {`<${type}>`}
   </text>
