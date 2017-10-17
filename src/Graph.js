@@ -31,7 +31,7 @@ class Graph extends React.Component {
       "setActiveNode",
       "updateState",
       "svgPoint",
-      "addToViewPort"
+      "initPanZoom"
     ]);
 
     this.resetActiveEdge();
@@ -40,26 +40,30 @@ class Graph extends React.Component {
   }
 
   svgPoint(x, y) {
-    if (!this.svgViewport)
-      this.svgViewport = document.querySelector(".svg-pan-zoom_viewport");
-    this.svgDropPoint.x = x;
-    this.svgDropPoint.y = y;
-    const point = this.svgDropPoint.matrixTransform(
-      this.svgViewport.getCTM().inverse()
-    );
+    let point = this.refs.svg.createSVGPoint();
+    point.x = x;
+    point.y = y;
+    point = point.matrixTransform(this.refs.viewport.getCTM().inverse());
     return [Math.floor(point.x), Math.floor(point.y)];
   }
 
-  addToViewPort(element) {
-    const parent = document.querySelector(".svg-pan-zoom_viewport");
-    if (parent) {
-      parent.appendChild(element);
-    }
+  initPanZoom() {
+    this.panZoom = SVGPZ(this.refs.svg, {
+      viewportSelector: this.refs.viewport,
+      zoomEnabled: true,
+      panEnabled: true,
+      controlIconsEnabled: true,
+      fit: true,
+      center: false,
+      preventMouseEventsDefault: false,
+      zoomScaleSensitivity: 0.3,
+      dblClickZoomEnabled: false,
+      maxZoom: 1,
+      minZoom: 0.1
+    });
   }
 
   componentDidMount() {
-    this.svgDropPoint = this.refs.svg.createSVGPoint();
-
     this.signalGraph.signal.add(payload => {
       this.setState(prevState => {
         prevState[payload[0]].value = payload[1];
@@ -72,20 +76,8 @@ class Graph extends React.Component {
       this.addNode(key, node.component, node.x, node.y, node.state, node.input);
     }
 
-    setTimeout(() => {
-      this.panZoom = SVGPZ("#graph", {
-        zoomEnabled: true,
-        panEnabled: true,
-        controlIconsEnabled: true,
-        fit: true,
-        center: false,
-        preventMouseEventsDefault: false,
-        zoomScaleSensitivity: 0.3,
-        dblClickZoomEnabled: false,
-        maxZoom: 1,
-        minZoom: 0.1
-      });
-    }, 10);
+    // doesn't work without timeout
+    setTimeout(this.initPanZoom, 5);
   }
 
   updateState = key => input => {
@@ -250,26 +242,27 @@ class Graph extends React.Component {
         xmlns="http://www.w3.org/2000/svg"
         ref="svg"
       >
-        {Object.keys(this.state).map(key => {
-          const SpecificNode = nodes[this.state[key].component].node;
-          return (
-            <SpecificNode
-              key={key}
-              id={key}
-              node={nodes[this.state[key].component]}
-              x={this.state[key].x}
-              y={this.state[key].y}
-              state={this.state[key].state}
-              input={this.state[key].input}
-              updateState={this.updateState(key)}
-              setActiveNode={this.setActiveNode}
-              inportClicked={this.inportClicked}
-              outportClicked={this.outportClicked}
-              value={this.state[key].value}
-              addToViewport={this.addToViewPort}
-            />
-          );
-        })}
+        <g ref="viewport">
+          {Object.keys(this.state).map(key => {
+            const SpecificNode = nodes[this.state[key].component].node;
+            return (
+              <SpecificNode
+                key={key}
+                id={key}
+                node={nodes[this.state[key].component]}
+                x={this.state[key].x}
+                y={this.state[key].y}
+                state={this.state[key].state}
+                input={this.state[key].input}
+                updateState={this.updateState(key)}
+                setActiveNode={this.setActiveNode}
+                inportClicked={this.inportClicked}
+                outportClicked={this.outportClicked}
+                value={this.state[key].value}
+              />
+            );
+          })}
+        </g>
       </svg>
     );
   }
