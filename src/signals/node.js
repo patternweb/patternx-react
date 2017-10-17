@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import deepEqual from "fast-deep-equal";
 
 export default function Node(id, fn, initialParams = {}, inports = []) {
   try {
@@ -27,13 +28,13 @@ export default function Node(id, fn, initialParams = {}, inports = []) {
 Node.prototype._setCalculatedOutput = function(cb, output) {
   this.output = output;
 
-  // console.log(
-  //   chalk.magenta("CALCULATED"),
-  //   this.id,
-  //   "=",
-  //   this.output,
-  //   this.input
-  // );
+  console.log(
+    chalk.magenta("CALCULATED"),
+    this.id,
+    "=",
+    this.output,
+    this.input
+  );
 
   cb(this.output);
 };
@@ -42,14 +43,14 @@ Node.prototype.remove = function() {
   while (this.listeners.length > 0) {
     this.listeners.pop().detach();
   }
-  // console.log(chalk.red("REMOVED"), this.id);
+  console.log(chalk.red("REMOVED"), this.id);
 };
 
 Node.prototype.update = function(params) {
-  const prevInput = JSON.stringify(this.input);
+  const prevInput = this.input;
   // this._attachFn.next(params)
   this.input = { ...this.input, ...params };
-  if (prevInput !== JSON.stringify(this.input)) {
+  if (!deepEqual(prevInput, this.input)) {
     this.output = undefined;
   }
   return this;
@@ -57,7 +58,7 @@ Node.prototype.update = function(params) {
 
 Node.prototype.run = function(cb) {
   if (this.output) {
-    // console.log(chalk.green("CACHED OUTPUT"), this.id);
+    console.log(chalk.green("CACHED OUTPUT"), this.id);
     cb(this.output);
   } else if (
     this.inports.every(
@@ -76,7 +77,7 @@ Node.prototype.run = function(cb) {
     // this._attachFn = this.generator(this.input)
     // this._attachFn.next()
   } else {
-    // console.log(chalk.yellow("WAITING"), this.id, this.input);
+    console.log(chalk.yellow("WAITING"), this.id, this.input);
     cb(this.output);
   }
 };

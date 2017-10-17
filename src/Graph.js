@@ -6,6 +6,11 @@ import bindAll from "lodash/bindAll";
 import SignalGraph from "./signals/index";
 import SVGPZ from "svg-pan-zoom";
 
+const Mouse = {
+  UP: 0,
+  DOWN: 1
+};
+
 class Graph extends React.Component {
   state = {};
 
@@ -19,24 +24,41 @@ class Graph extends React.Component {
       "handleDoubleClick",
       "handleMouseMove",
       "handleMouseUp",
+      "handleMouseDown",
       "inportClicked",
       "outportClicked",
       "resetActiveEdge",
       "setActiveNode",
-      "updateState"
+      "updateState",
+      "svgPoint"
     ]);
 
     this.resetActiveEdge();
     this.signalGraph = SignalGraph();
+    this.mouse = Mouse.UP;
+  }
+
+  svgPoint(x, y) {
+    if (!this.svgViewport)
+      this.svgViewport = document.querySelector(".svg-pan-zoom_viewport");
+    this.svgDropPoint.x = x;
+    this.svgDropPoint.y = y;
+    const point = this.svgDropPoint.matrixTransform(
+      this.svgViewport.getCTM().inverse()
+    );
+    return [Math.floor(point.x), Math.floor(point.y)];
   }
 
   componentDidMount() {
+    this.svgDropPoint = this.refs.svg.createSVGPoint();
+
     this.signalGraph.signal.add(payload => {
       this.setState(prevState => {
         prevState[payload[0]].value = payload[1];
         return prevState;
       });
     });
+
     for (const key of Object.keys(exampleState)) {
       const node = exampleState[key];
       this.addNode(key, node.component, node.x, node.y, node.state, node.input);
@@ -45,9 +67,9 @@ class Graph extends React.Component {
     setTimeout(() => {
       this.panZoom = SVGPZ("#graph", {
         zoomEnabled: true,
-        panEnabled: false,
+        panEnabled: true,
         controlIconsEnabled: true,
-        fit: false,
+        fit: true,
         center: false,
         preventMouseEventsDefault: false,
         zoomScaleSensitivity: 0.3,
@@ -59,7 +81,7 @@ class Graph extends React.Component {
   }
 
   updateState = key => input => {
-    if (input.value) {
+    if (input.value !== undefined) {
       this.signalGraph.update(key, input);
     } else {
       this.setState(prevState => {
@@ -75,23 +97,39 @@ class Graph extends React.Component {
     event.preventDefault();
   }
 
+  handleMouseDown(event) {
+    this.mouse = Mouse.DOWN;
+  }
+
   handleMouseMove(event) {
+    if (this.panZoom && this.mouse === Mouse.UP) {
+      if (event.target === this.refs.svg) {
+        this.panZoom.enablePan();
+      } else {
+        this.panZoom.disablePan();
+      }
+    }
+
     if (!this.activeNodeId) return;
-    const { pageX, pageY } = event;
+
+    const [x, y] = this.svgPoint(event.pageX, event.pageY);
+    // const { pageX, pageY } = event;
+
     this.setState(prevState => {
-      prevState[this.activeNodeId].x = pageX - this.dragOffset.x;
-      prevState[this.activeNodeId].y = pageY - this.dragOffset.y;
+      prevState[this.activeNodeId].x = x - this.dragOffset.x;
+      prevState[this.activeNodeId].y = y - this.dragOffset.y;
       return prevState;
     });
   }
 
   handleClick(event) {
-    console.log(event);
     if (event.target === this.refs.svg) this.resetActiveEdge();
   }
 
   handleMouseUp(event) {
+    this.mouse = Mouse.UP;
     this.activeNodeId = undefined;
+    this.panZoom.enablePan();
   }
 
   handleDoubleClick(event) {
@@ -102,9 +140,10 @@ class Graph extends React.Component {
 
   setActiveNode(event) {
     const rect = event.currentTarget.getBoundingClientRect();
+    const [x, y] = this.svgPoint(event.pageX, event.pageY);
     this.dragOffset = {
-      x: event.pageX - (rect.x + rect.width / 2),
-      y: event.pageY - (rect.y + rect.height / 2)
+      x: x - this.svgPoint(rect.x + rect.width / 2, 0)[0],
+      y: y - this.svgPoint(0, rect.y + rect.height / 2)[1]
     };
     this.activeNodeId = event.currentTarget.id;
   }
@@ -193,6 +232,7 @@ class Graph extends React.Component {
     return (
       <svg
         id="graph"
+        onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}
         onClick={this.handleClick}

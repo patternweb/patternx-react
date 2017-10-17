@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "chalk": "^2.1.0",
+    "fast-deep-equal": "^1.0.0",
     "github-api": "^3.0.0",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",

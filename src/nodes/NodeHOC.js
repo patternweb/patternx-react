@@ -1,5 +1,6 @@
 import React from "react";
 import Port from "./Port";
+import bindAll from "lodash/bindAll";
 
 const portParams = (port, index, processId) => ({
   y: (index + 1) * 20,
@@ -12,6 +13,11 @@ const [width, height] = [300, 200];
 
 const NodeHOC = InnerComponent => {
   return class extends React.Component {
+    constructor(props) {
+      super(props);
+      bindAll(this, ["buildInport", "buildOutport", "handleChange"]);
+    }
+
     buildOutport(port, index) {
       const id = [this.props.id, port].join(">");
       return (
@@ -72,16 +78,14 @@ const NodeHOC = InnerComponent => {
               className="inports"
               transform={`translate(${-width / 2},${-height / 2 + 30})`}
             >
-              {Object.keys(this.props.node.inports || []).map(
-                this.buildInport.bind(this)
-              )}
+              {Object.keys(this.props.node.inports || []).map(this.buildInport)}
             </g>
             <g
               className="outports"
               transform={`translate(${width / 2},${-height / 2 + 30})`}
             >
               {Object.keys(this.props.node.outports || []).map(
-                this.buildOutport.bind(this)
+                this.buildOutport
               )}
             </g>
           </g>
@@ -91,7 +95,7 @@ const NodeHOC = InnerComponent => {
               state={state}
               input={input}
               updateState={this.props.updateState}
-              handleChange={this.handleChange.bind(this)}
+              handleChange={this.handleChange}
               value={value}
             />
           </foreignObject>

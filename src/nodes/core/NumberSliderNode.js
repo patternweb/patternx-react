@@ -19,7 +19,7 @@ class NumberSliderNode extends React.Component {
 
   render() {
     const { min, max, step } = this.props.state;
-    const { handleChange, value } = this.props;
+    const { handleChange, value = 1 } = this.props;
     return (
       <div>
         <input
