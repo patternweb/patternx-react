@@ -16,9 +16,8 @@ body {
   overflow: hidden;
 }
 
-foreignObject {
+foreignObject > div {
   font-size: 10px;
-
   // position: fixed;
   padding: 0 10px;
 }
