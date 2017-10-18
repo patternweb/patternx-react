@@ -191,8 +191,18 @@ class Graph extends React.Component {
 
   addEdge = edgeProperties => {
     // console.log("ADDING EDGE", edgeProperties);
-    this.signalGraph.update(edgeProperties.to.processId, {
+    const newObject = {
       [edgeProperties.to.port]: `$${edgeProperties.from.processId}`
+    };
+    this.signalGraph.update(edgeProperties.to.processId, newObject);
+
+    this.setState(prevState => {
+      prevState.nodes[edgeProperties.to.processId].input = Object.assign(
+        {},
+        prevState.nodes[edgeProperties.to.processId].input,
+        newObject
+      );
+      return prevState;
     });
 
     const signalNode = this.signalGraph.nodes[edgeProperties.to.processId];
@@ -260,7 +270,7 @@ class Graph extends React.Component {
   }
 
   saveGraph = () => {
-    console.log(JSON.stringify(this.state));
+    console.log(JSON.stringify(this.state, null, 2));
   };
 
   render() {
@@ -277,7 +287,6 @@ class Graph extends React.Component {
         xmlns="http://www.w3.org/2000/svg"
       >
         <g ref="viewport">
-          {this.state.edges.map(this.buildEdge)}
           {Object.keys(this.state.nodes).map(this.buildNode)}
         </g>
 
@@ -288,5 +297,6 @@ class Graph extends React.Component {
     );
   }
 }
+// {Object.keys(this.state.nodes.filter(n => n.input)).map(this.buildEdge)}
 
 export default Graph;

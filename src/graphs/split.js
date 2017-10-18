@@ -37,19 +37,19 @@ export const nodes = {
     y: 300,
     component: "Add",
     input: {
-      x: "$slider1",
-      y: "$slider2"
-    }
-  },
-  add2: {
-    x: 1200,
-    y: 400,
-    component: "Add",
-    input: {
-      x: "$add",
-      y: "$slider3"
+      // x: "$slider1",
+      // y: "$slider2"
     }
   }
+  // add2: {
+  //   x: 1200,
+  //   y: 400,
+  //   component: "Add",
+  //   input: {
+  //     x: "$add",
+  //     y: "$slider3"
+  //   }
+  // }
 };
 
 export const edges = [];

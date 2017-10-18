@@ -11,7 +11,7 @@ async function loadGist(id, authCredentials = null) {
 
 export async function loadGistCode(id) {
   let gist = await loadGist(id);
-  return gist.files["index.js"].content;
+  return gist.files["graph.js"].content;
 }
 
 // loadGistCode('572fb9500506b48f547de255e5540729').then(console.log)

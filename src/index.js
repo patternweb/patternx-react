@@ -4,10 +4,24 @@ import Graph from "./Graph";
 import registerServiceWorker from "./registerServiceWorker";
 
 import { nodes, edges } from "./graphs/split";
+import { loadGistCode } from "./github/load_gist";
 
-ReactDOM.render(
-  <Graph nodes={nodes} edges={edges} />,
-  document.getElementById("root")
-);
+async function getGraphData() {
+  const params = new URLSearchParams(window.location.search);
+  const gistID = params.get("gist");
+  if (gistID) {
+    const gistCode = await loadGistCode(gistID);
+    return JSON.parse(gistCode).nodes;
+  } else {
+    return nodes;
+  }
+}
 
-registerServiceWorker();
+getGraphData().then(nodes => {
+  console.log(nodes);
+  ReactDOM.render(
+    <Graph nodes={nodes} edges={[]} />,
+    document.getElementById("root")
+  );
+  registerServiceWorker();
+});
