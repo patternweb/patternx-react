@@ -10,7 +10,7 @@ const Port = ({ id, name, type, y, clickFn, processId }) => (
     y={y}
     id={id}
     onClick={handlePortClick(clickFn, name, processId)}
-    shape-rendering="cripEdges"
+    /*shapeRendering="cripEdges"*/
   >
     {name}
     {`<${type}>`}

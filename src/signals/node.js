@@ -28,13 +28,13 @@ export default function Node(id, fn, initialParams = {}, inports = []) {
 Node.prototype._setCalculatedOutput = function(cb, output) {
   this.output = output;
 
-  console.log(
-    chalk.magenta("CALCULATED"),
-    this.id,
-    "=",
-    this.output,
-    this.input
-  );
+  // console.log(
+  //   chalk.magenta("CALCULATED"),
+  //   this.id,
+  //   "=",
+  //   this.output,
+  //   this.input
+  // );
 
   cb(this.output);
 };

@@ -1,10 +1,10 @@
-import React from "react";
-import nodes from "./nodes";
-import exampleState from "./graphs/new";
-import { randomName } from "./utils";
 import bindAll from "lodash/bindAll";
+import exampleState from "./graphs/unconnected";
+import nodes from "./nodes";
+import React from "react";
 import SignalGraph from "./signals/index";
 import SVGPZ from "svg-pan-zoom";
+import { randomName } from "./utils";
 
 const Mouse = {
   UP: 0,
@@ -22,16 +22,16 @@ class Graph extends React.Component {
       "handleClick",
       "handleContextMenu",
       "handleDoubleClick",
+      "handleMouseDown",
       "handleMouseMove",
       "handleMouseUp",
-      "handleMouseDown",
+      "initPanZoom",
       "inportClicked",
       "outportClicked",
       "resetActiveEdge",
       "setActiveNode",
-      "updateState",
       "svgPoint",
-      "initPanZoom"
+      "updateState"
     ]);
 
     this.resetActiveEdge();
@@ -39,27 +39,19 @@ class Graph extends React.Component {
     this.mouse = Mouse.UP;
   }
 
-  svgPoint(x, y) {
-    let point = this.refs.svg.createSVGPoint();
-    point.x = x;
-    point.y = y;
-    point = point.matrixTransform(this.refs.viewport.getCTM().inverse());
-    return [Math.floor(point.x), Math.floor(point.y)];
-  }
-
   initPanZoom() {
     this.panZoom = SVGPZ(this.refs.svg, {
+      center: false,
+      controlIconsEnabled: true,
+      dblClickZoomEnabled: false,
+      fit: true,
+      maxZoom: 1,
+      minZoom: 0.1,
+      panEnabled: true,
+      preventMouseEventsDefault: false,
       viewportSelector: this.refs.viewport,
       zoomEnabled: true,
-      panEnabled: true,
-      controlIconsEnabled: true,
-      fit: true,
-      center: false,
-      preventMouseEventsDefault: false,
-      zoomScaleSensitivity: 0.3,
-      dblClickZoomEnabled: false,
-      maxZoom: 1,
-      minZoom: 0.1
+      zoomScaleSensitivity: 0.3
     });
   }
 
@@ -80,6 +72,14 @@ class Graph extends React.Component {
     setTimeout(this.initPanZoom, 5);
   }
 
+  svgPoint(x, y) {
+    let point = this.refs.svg.createSVGPoint();
+    point.x = x;
+    point.y = y;
+    point = point.matrixTransform(this.refs.viewport.getCTM().inverse());
+    return [Math.floor(point.x), Math.floor(point.y)];
+  }
+
   updateState = key => input => {
     if (input.value !== undefined) {
       this.signalGraph.update(key, input);
@@ -92,14 +92,6 @@ class Graph extends React.Component {
       });
     }
   };
-
-  handleContextMenu(event) {
-    event.preventDefault();
-  }
-
-  handleMouseDown(event) {
-    this.mouse = Mouse.DOWN;
-  }
 
   handleMouseMove(event) {
     if (this.panZoom && this.mouse === Mouse.UP) {
@@ -122,14 +114,22 @@ class Graph extends React.Component {
     });
   }
 
-  handleClick(event) {
-    if (event.target === this.refs.svg) this.resetActiveEdge();
+  handleContextMenu(event) {
+    event.preventDefault();
   }
 
   handleMouseUp(event) {
     this.mouse = Mouse.UP;
     this.activeNodeId = undefined;
     this.panZoom.enablePan();
+  }
+
+  handleMouseDown(event) {
+    this.mouse = Mouse.DOWN;
+  }
+
+  handleClick(event) {
+    if (event.target === this.refs.svg) this.resetActiveEdge();
   }
 
   handleDoubleClick(event) {
@@ -203,19 +203,24 @@ class Graph extends React.Component {
   }
 
   addEdge(edgeProperties) {
-    console.log("ADDING EDGE", edgeProperties);
+    // console.log("ADDING EDGE", edgeProperties);
+    // this.signalGraph.update(edgeProperties.to.processId,
+    //   { [edgeProperties.to.port]: `$${edgeProperties.from.processId}` })
+
+    this.signalGraph.update("add", { x: "$slider1", y: "$slider2" });
+
     this.resetActiveEdge();
   }
 
   inportClicked(inport, processId) {
-    console.log({ inport, processId });
+    // console.log({ inport, processId });
     this.activeEdge.to = { port: inport, processId };
 
     if (this.activeEdge.from) this.addEdge(this.activeEdge);
   }
 
   outportClicked(outport, processId, port) {
-    console.log({ outport, processId, port });
+    // console.log({ outport, processId, port });
     this.activeEdge.from = { port: outport, processId };
 
     if (this.activeEdge.to) this.addEdge(this.activeEdge);
@@ -233,32 +238,32 @@ class Graph extends React.Component {
     return (
       <svg
         id="graph"
-        onMouseDown={this.handleMouseDown}
-        onMouseUp={this.handleMouseUp}
-        onMouseMove={this.handleMouseMove}
         onClick={this.handleClick}
-        onDoubleClick={this.handleDoubleClick}
         onContextMenu={this.handleContextMenu}
-        xmlns="http://www.w3.org/2000/svg"
+        onDoubleClick={this.handleDoubleClick}
+        onMouseDown={this.handleMouseDown}
+        onMouseMove={this.handleMouseMove}
+        onMouseUp={this.handleMouseUp}
         ref="svg"
+        xmlns="http://www.w3.org/2000/svg"
       >
         <g ref="viewport">
           {Object.keys(this.state).map(key => {
             const SpecificNode = nodes[this.state[key].component].node;
             return (
               <SpecificNode
-                key={key}
                 id={key}
+                inportClicked={this.inportClicked}
+                input={this.state[key].input}
+                key={key}
                 node={nodes[this.state[key].component]}
+                outportClicked={this.outportClicked}
+                setActiveNode={this.setActiveNode}
+                state={this.state[key].state}
+                updateState={this.updateState(key)}
+                value={this.state[key].value}
                 x={this.state[key].x}
                 y={this.state[key].y}
-                state={this.state[key].state}
-                input={this.state[key].input}
-                updateState={this.updateState(key)}
-                setActiveNode={this.setActiveNode}
-                inportClicked={this.inportClicked}
-                outportClicked={this.outportClicked}
-                value={this.state[key].value}
               />
             );
           })}
