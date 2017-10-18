@@ -7,6 +7,8 @@ import * as CanvasNode from "./graphics/CanvasNode";
 import * as PolygonNode from "./svg/PolygonNode";
 import * as AddNode from "./math/AddNode";
 
+import * as BoxNode from "./threejs/BoxNode";
+
 const nodes = {
   Add: {
     node: AddNode.default,
@@ -18,6 +20,14 @@ const nodes = {
     },
     outports: {
       result: "Number"
+    }
+  },
+  Box: {
+    node: BoxNode.default,
+    implementation: BoxNode.implementation,
+    inports: {
+      width: "Number",
+      height: "Number"
     }
   },
   WebSocket: {

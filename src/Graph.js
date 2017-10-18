@@ -15,40 +15,15 @@ const Mouse = {
 class Graph extends React.Component {
   state = {
     nodes: {},
-    edges: {}
+    edges: [[0, 1]]
   };
 
-  constructor(props) {
-    super(props);
-    bindAll(this, [
-      "addEdge",
-      "addRandomNode",
-      "handleClick",
-      "handleContextMenu",
-      "handleDoubleClick",
-      "handleMouseDown",
-      "handleMouseMove",
-      "handleMouseUp",
-      "initPanZoom",
-      "inportClicked",
-      "outportClicked",
-      "resetActiveEdge",
-      "setActiveNode",
-      "svgPoint",
-      "updateState"
-    ]);
-
-    this.resetActiveEdge();
-    this.signalGraph = SignalGraph();
-    this.mouse = Mouse.UP;
-  }
-
-  initPanZoom() {
+  initPanZoom = () => {
     this.panZoom = SVGPZ(this.refs.svg, {
       center: false,
       controlIconsEnabled: true,
       dblClickZoomEnabled: false,
-      fit: true,
+      fit: false,
       maxZoom: 1,
       minZoom: 0.1,
       panEnabled: true,
@@ -57,9 +32,13 @@ class Graph extends React.Component {
       zoomEnabled: true,
       zoomScaleSensitivity: 0.3
     });
-  }
+  };
 
   componentDidMount() {
+    this.resetActiveEdge();
+    this.signalGraph = SignalGraph();
+    this.mouse = Mouse.UP;
+
     this.signalGraph.signal.add(payload => {
       this.setState(prevState => {
         prevState.nodes[payload[0]].value = payload[1];
@@ -76,13 +55,13 @@ class Graph extends React.Component {
     setTimeout(this.initPanZoom, 5);
   }
 
-  svgPoint(x, y) {
+  svgPoint = (x, y) => {
     let point = this.refs.svg.createSVGPoint();
     point.x = x;
     point.y = y;
     point = point.matrixTransform(this.refs.viewport.getCTM().inverse());
     return [Math.floor(point.x), Math.floor(point.y)];
-  }
+  };
 
   updateState = key => input => {
     if (input.value !== undefined) {
@@ -101,7 +80,7 @@ class Graph extends React.Component {
     }
   };
 
-  handleMouseMove(event) {
+  handleMouseMove = event => {
     if (this.panZoom && this.mouse === Mouse.UP) {
       if (event.target === this.refs.svg) {
         this.panZoom.enablePan();
@@ -120,33 +99,38 @@ class Graph extends React.Component {
       prevState.nodes[this.activeNodeId].y = y - this.dragOffset.y;
       return prevState;
     });
-  }
+  };
 
-  handleContextMenu(event) {
+  openPopup = node => {
+    console.log(`window.open(undefined, "${node}", "height=300,width=300")`);
+    window.open(undefined, node, "height=300,width=300");
+  };
+
+  handleContextMenu = event => {
     event.preventDefault();
-  }
+  };
 
-  handleMouseUp(event) {
+  handleMouseUp = event => {
     this.mouse = Mouse.UP;
     this.activeNodeId = undefined;
     this.panZoom.enablePan();
-  }
+  };
 
-  handleMouseDown(event) {
+  handleMouseDown = event => {
     this.mouse = Mouse.DOWN;
-  }
+  };
 
-  handleClick(event) {
+  handleClick = event => {
     if (event.target === this.refs.svg) this.resetActiveEdge();
-  }
+  };
 
-  handleDoubleClick(event) {
+  handleDoubleClick = event => {
     if (event.target === this.refs.svg) {
       this.addRandomNode(event);
     }
-  }
+  };
 
-  setActiveNode(event) {
+  setActiveNode = event => {
     const rect = event.currentTarget.getBoundingClientRect();
     const [x, y] = this.svgPoint(event.pageX, event.pageY);
     this.dragOffset = {
@@ -154,7 +138,7 @@ class Graph extends React.Component {
       y: y - this.svgPoint(0, rect.y + rect.height / 2)[1]
     };
     this.activeNodeId = event.currentTarget.id;
-  }
+  };
 
   addNode(id, component, x, y, state = undefined, input = undefined) {
     this.setState(prevState => {
@@ -198,19 +182,19 @@ class Graph extends React.Component {
     });
   }
 
-  addRandomNode(event) {
+  addRandomNode = event => {
     const [x, y] = this.svgPoint(event.pageX, event.pageY);
     this.addNode(randomName(), "NumberSlider", x, y);
-  }
+  };
 
-  resetActiveEdge() {
+  resetActiveEdge = () => {
     this.activeEdge = {
       from: undefined,
       to: undefined
     };
-  }
+  };
 
-  addEdge(edgeProperties) {
+  addEdge = edgeProperties => {
     // console.log("ADDING EDGE", edgeProperties);
     this.signalGraph.update(edgeProperties.to.processId, {
       [edgeProperties.to.port]: `$${edgeProperties.from.processId}`
@@ -231,16 +215,16 @@ class Graph extends React.Component {
     this.signalGraph.run(edgeProperties.from.processId);
 
     this.resetActiveEdge();
-  }
+  };
 
-  inportClicked(inport, processId) {
+  inportClicked = (inport, processId) => {
     // console.log({ inport, processId });
     this.activeEdge.to = { port: inport, processId };
 
     if (this.activeEdge.from) this.addEdge(this.activeEdge);
-  }
+  };
 
-  outportClicked(outport, processId, port) {
+  outportClicked = (outport, processId, port) => {
     // console.log({ outport, processId, port });
     this.activeEdge.from = { port: outport, processId };
 
@@ -253,14 +237,43 @@ class Graph extends React.Component {
     // });
     // const activeEdge = <Edge fromX={100} toX={100} fromY={100} toY={100} />
     // this.setState({...this.state, activeEdge})
+  };
+
+  buildNode = key => {
+    const SpecificNode = nodes[this.state.nodes[key].component].node;
+    return (
+      <SpecificNode
+        id={key}
+        inportClicked={this.inportClicked}
+        input={this.state.nodes[key].input}
+        key={key}
+        node={nodes[this.state.nodes[key].component]}
+        openPopup={this.openPopup}
+        outportClicked={this.outportClicked}
+        setActiveNode={this.setActiveNode}
+        state={this.state.nodes[key].state}
+        updateState={this.updateState(key)}
+        value={this.state.nodes[key].value}
+        x={this.state.nodes[key].x}
+        y={this.state.nodes[key].y}
+      />
+    );
+  };
+
+  buildEdge(key) {
+    return <Edge key={key} fromX={100} fromY={100} toX={500} toY={500} />;
   }
+
+  saveGraph = () => {
+    console.log(JSON.stringify(this.state));
+  };
 
   render() {
     return (
       <svg
         id="graph"
         onClick={this.handleClick}
-        onContextMenu={this.handleContextMenu}
+        /*onContextMenu={this.handleContextMenu}*/
         onDoubleClick={this.handleDoubleClick}
         onMouseDown={this.handleMouseDown}
         onMouseMove={this.handleMouseMove}
@@ -269,26 +282,13 @@ class Graph extends React.Component {
         xmlns="http://www.w3.org/2000/svg"
       >
         <g ref="viewport">
-          {Object.keys(this.state.nodes).map(key => {
-            const SpecificNode = nodes[this.state.nodes[key].component].node;
-            return (
-              <SpecificNode
-                id={key}
-                inportClicked={this.inportClicked}
-                input={this.state.nodes[key].input}
-                key={key}
-                node={nodes[this.state.nodes[key].component]}
-                outportClicked={this.outportClicked}
-                setActiveNode={this.setActiveNode}
-                state={this.state.nodes[key].state}
-                updateState={this.updateState(key)}
-                value={this.state.nodes[key].value}
-                x={this.state.nodes[key].x}
-                y={this.state.nodes[key].y}
-              />
-            );
-          })}
+          {this.state.edges.map(this.buildEdge)}
+          {Object.keys(this.state.nodes).map(this.buildNode)}
         </g>
+
+        <text className="button" x={10} y={10} onClick={this.saveGraph}>
+          Save Graph
+        </text>
       </svg>
     );
   }

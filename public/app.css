@@ -18,6 +18,7 @@ body {
 
 foreignObject {
   font-size: 10px;
+
   // position: fixed;
   padding: 0 10px;
 }
@@ -109,10 +110,15 @@ g.node rect {
 }
 
 path.edge {
-  stroke: black;
+  stroke: #EEE;
   stroke-linejoin: round;
-  stroke-width: 5;
+  stroke-width: 4;
   fill: none;
+  cursor: pointer;
+}
+
+path.edge:hover {
+  stroke: red;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
@@ -227,4 +233,8 @@ text, input, rect {
   font-smooth: never;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+text.button {
+  cursor: pointer;
 }

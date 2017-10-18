@@ -43,6 +43,12 @@ const state = {
     y: 400,
     component: "Add",
     input: {}
+  },
+  box: {
+    x: 900,
+    y: 500,
+    component: "Box",
+    input: {}
   }
 };
 
