@@ -1,6 +1,5 @@
 import bindAll from "lodash/bindAll";
 import Edge from "./Edge";
-import exampleState from "./graphs/unconnected";
 import nodes from "./nodes";
 import React from "react";
 import SignalGraph from "./signals/index";
@@ -18,7 +17,24 @@ class Graph extends React.Component {
     edges: [[0, 1]]
   };
 
-  initPanZoom = () => {
+  mouse = Mouse.UP;
+  signalGraph = SignalGraph();
+
+  componentDidMount() {
+    this.resetActiveEdge();
+
+    this.signalGraph.signal.add(payload => {
+      this.setState(prevState => {
+        prevState.nodes[payload[0]].value = payload[1];
+        return prevState;
+      });
+    });
+
+    for (const key of Object.keys(this.props.nodes)) {
+      const node = this.props.nodes[key];
+      this.addNode(key, node.component, node.x, node.y, node.state, node.input);
+    }
+
     this.panZoom = SVGPZ(this.refs.svg, {
       center: false,
       controlIconsEnabled: true,
@@ -32,27 +48,6 @@ class Graph extends React.Component {
       zoomEnabled: true,
       zoomScaleSensitivity: 0.3
     });
-  };
-
-  componentDidMount() {
-    this.resetActiveEdge();
-    this.signalGraph = SignalGraph();
-    this.mouse = Mouse.UP;
-
-    this.signalGraph.signal.add(payload => {
-      this.setState(prevState => {
-        prevState.nodes[payload[0]].value = payload[1];
-        return prevState;
-      });
-    });
-
-    for (const key of Object.keys(exampleState)) {
-      const node = exampleState[key];
-      this.addNode(key, node.component, node.x, node.y, node.state, node.input);
-    }
-
-    // doesn't work without timeout
-    setTimeout(this.initPanZoom, 5);
   }
 
   svgPoint = (x, y) => {

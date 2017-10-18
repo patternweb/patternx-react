@@ -3,6 +3,11 @@ import ReactDOM from "react-dom";
 import Graph from "./Graph";
 import registerServiceWorker from "./registerServiceWorker";
 
-ReactDOM.render(<Graph />, document.getElementById("root"));
+import { nodes, edges } from "./graphs/split";
+
+ReactDOM.render(
+  <Graph nodes={nodes} edges={edges} />,
+  document.getElementById("root")
+);
 
 registerServiceWorker();
