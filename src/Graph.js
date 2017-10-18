@@ -1,4 +1,5 @@
 import bindAll from "lodash/bindAll";
+import Edge from "./Edge";
 import exampleState from "./graphs/unconnected";
 import nodes from "./nodes";
 import React from "react";
@@ -12,7 +13,10 @@ const Mouse = {
 };
 
 class Graph extends React.Component {
-  state = {};
+  state = {
+    nodes: {},
+    edges: {}
+  };
 
   constructor(props) {
     super(props);
@@ -58,7 +62,7 @@ class Graph extends React.Component {
   componentDidMount() {
     this.signalGraph.signal.add(payload => {
       this.setState(prevState => {
-        prevState[payload[0]].value = payload[1];
+        prevState.nodes[payload[0]].value = payload[1];
         return prevState;
       });
     });
@@ -85,7 +89,11 @@ class Graph extends React.Component {
       this.signalGraph.update(key, input);
     } else {
       this.setState(prevState => {
-        prevState[key].state = Object.assign({}, prevState[key].state, input);
+        prevState.nodes[key].state = Object.assign(
+          {},
+          prevState.nodes[key].state,
+          input
+        );
         // console.log(key, input)
         this.signalGraph.update(key, input);
         return prevState;
@@ -108,8 +116,8 @@ class Graph extends React.Component {
     // const { pageX, pageY } = event;
 
     this.setState(prevState => {
-      prevState[this.activeNodeId].x = x - this.dragOffset.x;
-      prevState[this.activeNodeId].y = y - this.dragOffset.y;
+      prevState.nodes[this.activeNodeId].x = x - this.dragOffset.x;
+      prevState.nodes[this.activeNodeId].y = y - this.dragOffset.y;
       return prevState;
     });
   }
@@ -172,20 +180,20 @@ class Graph extends React.Component {
         // console.log('running', ob[key])
       });
 
-      prevState[id] = {
+      prevState.nodes[id] = {
         x,
         y,
         component
       };
-      if (state) prevState[id].state = state;
-      if (input) prevState[id].input = input;
+      if (state) prevState.nodes[id].state = state;
+      if (input) prevState.nodes[id].input = input;
       return prevState;
     });
   }
 
   removeNode(id) {
     this.setState(prevState => {
-      delete prevState[id];
+      delete prevState.nodes[id];
       return prevState;
     });
   }
@@ -261,22 +269,22 @@ class Graph extends React.Component {
         xmlns="http://www.w3.org/2000/svg"
       >
         <g ref="viewport">
-          {Object.keys(this.state).map(key => {
-            const SpecificNode = nodes[this.state[key].component].node;
+          {Object.keys(this.state.nodes).map(key => {
+            const SpecificNode = nodes[this.state.nodes[key].component].node;
             return (
               <SpecificNode
                 id={key}
                 inportClicked={this.inportClicked}
-                input={this.state[key].input}
+                input={this.state.nodes[key].input}
                 key={key}
-                node={nodes[this.state[key].component]}
+                node={nodes[this.state.nodes[key].component]}
                 outportClicked={this.outportClicked}
                 setActiveNode={this.setActiveNode}
-                state={this.state[key].state}
+                state={this.state.nodes[key].state}
                 updateState={this.updateState(key)}
-                value={this.state[key].value}
-                x={this.state[key].x}
-                y={this.state[key].y}
+                value={this.state.nodes[key].value}
+                x={this.state.nodes[key].x}
+                y={this.state.nodes[key].y}
               />
             );
           })}
