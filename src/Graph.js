@@ -204,10 +204,23 @@ class Graph extends React.Component {
 
   addEdge(edgeProperties) {
     // console.log("ADDING EDGE", edgeProperties);
-    // this.signalGraph.update(edgeProperties.to.processId,
-    //   { [edgeProperties.to.port]: `$${edgeProperties.from.processId}` })
+    this.signalGraph.update(edgeProperties.to.processId, {
+      [edgeProperties.to.port]: `$${edgeProperties.from.processId}`
+    });
 
-    this.signalGraph.update("add", { x: "$slider1", y: "$slider2" });
+    const signalNode = this.signalGraph.nodes[edgeProperties.to.processId];
+
+    signalNode.listeners.push(
+      this.signalGraph.signal
+        .filter(
+          payload => "$" + payload[0] === `$${edgeProperties.from.processId}`
+        )
+        .add(payload => {
+          signalNode.update({ [edgeProperties.to.port]: payload[1] });
+          this.signalGraph.run(edgeProperties.to.processId);
+        })
+    );
+    this.signalGraph.run(edgeProperties.from.processId);
 
     this.resetActiveEdge();
   }
