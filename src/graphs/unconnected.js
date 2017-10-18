@@ -44,10 +44,10 @@ const state = {
     component: "Add",
     input: {}
   },
-  box: {
+  popup: {
     x: 900,
     y: 500,
-    component: "Box",
+    component: "Popup",
     input: {}
   }
 };

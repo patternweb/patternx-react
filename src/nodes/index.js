@@ -7,7 +7,7 @@ import * as CanvasNode from "./graphics/CanvasNode";
 import * as PolygonNode from "./svg/PolygonNode";
 import * as AddNode from "./math/AddNode";
 
-import * as BoxNode from "./threejs/BoxNode";
+import * as PopupNode from "./PopupNode";
 
 const nodes = {
   Add: {
@@ -22,12 +22,12 @@ const nodes = {
       result: "Number"
     }
   },
-  Box: {
-    node: BoxNode.default,
-    implementation: BoxNode.implementation,
+  Popup: {
+    node: PopupNode.default,
+    implementation: PopupNode.implementation,
     inports: {
-      width: "Number",
-      height: "Number"
+      scene: "Scene",
+      camera: "Camera"
     }
   },
   WebSocket: {

@@ -14,6 +14,7 @@
     "most-w3msg": "^2.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-popout": "^1.0.1",
     "react-scripts": "1.0.14",
     "svg-pan-zoom": "^3.5.3",
     "three": "^0.87.1",
