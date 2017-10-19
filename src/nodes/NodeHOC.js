@@ -96,14 +96,16 @@ const NodeHOC = InnerComponent => {
             y={y}
             ref="foreignObject"
           >
-            <InnerComponent
-              {...this.props}
-              state={state}
-              input={input}
-              updateState={this.props.updateState}
-              handleChange={this.handleChange}
-              value={value}
-            />
+            <div>
+              <InnerComponent
+                {...this.props}
+                state={state}
+                input={input}
+                updateState={this.props.updateState}
+                handleChange={this.handleChange}
+                value={value}
+              />
+            </div>
           </foreignObject>
         </g>
       );
