@@ -101,11 +101,22 @@ g.node text:hover {
   fill: yellow;
 }
 
+@keyframes change-color {
+  50%   { fill: yellow; }
+  100% { fill: #555; }
+}
+
 g.node rect {
   fill: #555;
   stroke: #444;
+  stroke-width: 2;
   rx: 5;
   ry: 5;
+}
+
+g.node rect.animate {
+  stroke: limegreen;
+  // animation: change-color 1s;
 }
 
 path.edge {
@@ -236,4 +247,31 @@ text, input, rect {
 
 text.button {
   cursor: pointer;
+}
+
+#searchBox input {
+  display: block;
+  padding: 10px;
+  width: 100%;
+  color: #FFF;
+  margin: 0;
+  font-size: 20px;
+}
+#searchBox h3 {
+  color: #EEE;
+}
+#searchBox li {
+  cursor: pointer;
+}
+#searchBox li:hover {
+  background: #CCC;
+  color: #111;
+}
+
+h1 {
+  color: #FFF;
+  font-size: 40px;
+}
+input {
+  color: #FFF;
 }
