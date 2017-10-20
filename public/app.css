@@ -16,7 +16,7 @@ body {
   overflow: hidden;
 }
 
-foreignObject > div {
+foreignobject > div {
   font-size: 10px;
   // position: fixed;
   padding: 0 10px;
@@ -28,7 +28,7 @@ canvas {
 
 ul {
   background: #111;
-  color: #CCC;
+  color: #ccc;
   border-radius: 0 0 4px 4px;
   max-height: 300px;
   overflow: auto;
@@ -75,20 +75,19 @@ g.node text {
   cursor: pointer;
 }
 
-
-foreignObject div {
+foreignobject div {
   margin-bottom: 4px;
 }
-foreignObject input[type=text],
-foreignObject input[type=number],
-foreignObject textarea {
+foreignobject input[type="text"],
+foreignobject input[type="number"],
+foreignobject textarea {
   margin-left: 10px;
   background: #333;
-  color: #CCC;
+  color: #ccc;
   border: none;
   padding: 2px;
 }
-foreignObject input[disabled] {
+foreignobject input[disabled] {
   color: #888;
 }
 
@@ -102,8 +101,12 @@ g.node text:hover {
 }
 
 @keyframes change-color {
-  50%   { fill: yellow; }
-  100% { fill: #555; }
+  50% {
+    fill: yellow;
+  }
+  100% {
+    fill: #555;
+  }
 }
 
 g.node rect {
@@ -120,7 +123,7 @@ g.node rect.animate {
 }
 
 path.edge {
-  stroke: #EEE;
+  stroke: #eee;
   stroke-linejoin: round;
   stroke-width: 4;
   fill: none;
@@ -140,16 +143,15 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-
-input[type=range] {
+input[type="range"] {
   -webkit-appearance: none;
   margin: 18px 0;
   width: 100%;
 }
-input[type=range]:focus {
+input[type="range"]:focus {
   outline: none;
 }
-input[type=range]::-ms-track {
+input[type="range"]::-ms-track {
   width: 100%;
   height: 8.4px;
   cursor: pointer;
@@ -159,7 +161,7 @@ input[type=range]::-ms-track {
   border-width: 16px 0;
   color: transparent;
 }
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 8.4px;
   cursor: pointer;
@@ -169,10 +171,10 @@ input[type=range]::-webkit-slider-runnable-track {
   border-radius: 1.3px;
   border: 0.2px solid #010101;
 }
-input[type=range]:focus::-webkit-slider-runnable-track {
+input[type="range"]:focus::-webkit-slider-runnable-track {
   background: #367ebd;
 }
-input[type=range]::-moz-range-track {
+input[type="range"]::-moz-range-track {
   width: 100%;
   height: 8.4px;
   cursor: pointer;
@@ -182,7 +184,7 @@ input[type=range]::-moz-range-track {
   border-radius: 1.3px;
   border: 0.2px solid #010101;
 }
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   border: 1px solid #000000;
   height: 36px;
@@ -193,7 +195,7 @@ input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   margin-top: -14px;
 }
-input[type=range]::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   border: 1px solid #000000;
   height: 36px;
@@ -202,7 +204,7 @@ input[type=range]::-moz-range-thumb {
   background: #ffffff;
   cursor: pointer;
 }
-input[type=range]::-ms-thumb {
+input[type="range"]::-ms-thumb {
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   border: 1px solid #000000;
   height: 36px;
@@ -211,35 +213,39 @@ input[type=range]::-ms-thumb {
   background: #ffffff;
   cursor: pointer;
 }
-input[type=range]::-ms-fill-lower {
+input[type="range"]::-ms-fill-lower {
   background: #2a6495;
   border: 0.2px solid #010101;
   border-radius: 2.6px;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
-input[type=range]::-ms-fill-upper {
+input[type="range"]::-ms-fill-upper {
   background: #3071a9;
   border: 0.2px solid #010101;
   border-radius: 2.6px;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
 }
-input[type=range]:focus::-ms-fill-lower {
+input[type="range"]:focus::-ms-fill-lower {
   background: #3071a9;
 }
-input[type=range]:focus::-ms-fill-upper {
+input[type="range"]:focus::-ms-fill-upper {
   background: #367ebd;
 }
 
-:focus { outline: none; }
-
-input[type=range]::-moz-focus-outer {
-    border: 0;
-    }
-input[type=range]:focus {
-    outline: none;
+:focus {
+  outline: none;
 }
 
-text, input, rect {
+input[type="range"]::-moz-focus-outer {
+  border: 0;
+}
+input[type="range"]:focus {
+  outline: none;
+}
+
+text,
+input,
+rect {
   font-smooth: never;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -253,25 +259,25 @@ text.button {
   display: block;
   padding: 10px;
   width: 100%;
-  color: #FFF;
+  color: #fff;
   margin: 0;
   font-size: 20px;
 }
 #searchBox h3 {
-  color: #EEE;
+  color: #eee;
 }
 #searchBox li {
   cursor: pointer;
 }
 #searchBox li:hover {
-  background: #CCC;
+  background: #ccc;
   color: #111;
 }
 
 h1 {
-  color: #FFF;
+  color: #fff;
   font-size: 40px;
 }
 input {
-  color: #FFF;
+  color: #fff;
 }
