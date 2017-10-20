@@ -1,4 +1,3 @@
-import bindAll from "lodash/bindAll";
 import Edge from "./Edge";
 import nodes from "./nodes";
 import React from "react";

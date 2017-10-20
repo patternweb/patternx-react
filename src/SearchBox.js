@@ -33,7 +33,6 @@ class SearchBox extends React.Component {
       nodeName =>
         nodeName.toLowerCase().indexOf(this.state.query.toLowerCase()) >= 0
     );
-    const { addNode, nodes } = this.props;
     const [x, y] = this.props.xy;
     console.log({ x, y });
     return (
@@ -50,7 +49,7 @@ class SearchBox extends React.Component {
             {results.map(result => (
               <li key={result} onClick={this.addNode(result)}>
                 <h3>{result}</h3>
-                {nodes[result].description}
+                {this.props.nodes[result].description}
               </li>
             ))}
           </ul>
