@@ -2,9 +2,12 @@ import bindAll from "lodash/bindAll";
 import Edge from "./Edge";
 import nodes from "./nodes";
 import React from "react";
+import SearchBox from "./SearchBox";
 import SignalGraph from "./signals/index";
 import SVGPZ from "svg-pan-zoom";
 import { randomName } from "./utils";
+import { createGist } from "./github/create_gist";
+import { createFiles } from "./github/files";
 
 const Mouse = {
   UP: 0,
@@ -14,7 +17,8 @@ const Mouse = {
 class Graph extends React.Component {
   state = {
     nodes: {},
-    edges: [[0, 1]]
+    edges: [[0, 1]],
+    searchBox: undefined
   };
 
   mouse = Mouse.UP;
@@ -36,10 +40,10 @@ class Graph extends React.Component {
     }
 
     this.panZoom = SVGPZ(this.refs.svg, {
-      center: false,
+      center: Object.keys(this.state.nodes) > 0,
       controlIconsEnabled: true,
       dblClickZoomEnabled: false,
-      fit: false,
+      fit: Object.keys(this.state.nodes) > 0,
       maxZoom: 1,
       minZoom: 0.1,
       panEnabled: true,
@@ -116,12 +120,16 @@ class Graph extends React.Component {
   };
 
   handleClick = event => {
-    if (event.target === this.refs.svg) this.resetActiveEdge();
+    if (event.target === this.refs.svg) {
+      this.resetActiveEdge();
+      if (this.state.searchBox !== undefined) this.closeSearchBox();
+    }
   };
 
   handleDoubleClick = event => {
     if (event.target === this.refs.svg) {
-      this.addRandomNode(event);
+      // this.addRandomNode(event);
+      this.setState({ searchBox: [event.pageX, event.pageY] });
     }
   };
 
@@ -135,7 +143,7 @@ class Graph extends React.Component {
     this.activeNodeId = event.currentTarget.id;
   };
 
-  addNode(id, component, x, y, state = undefined, input = undefined) {
+  addNode = (id, component, x, y, state = undefined, input = undefined) => {
     this.setState(prevState => {
       // console.log(id, nodes[component].fn, input || {})
       const ob = input || {};
@@ -168,7 +176,7 @@ class Graph extends React.Component {
       if (input) prevState.nodes[id].input = input;
       return prevState;
     });
-  }
+  };
 
   removeNode(id) {
     this.setState(prevState => {
@@ -270,10 +278,40 @@ class Graph extends React.Component {
   }
 
   saveGraph = () => {
-    console.log(JSON.stringify(this.state, null, 2));
+    // console.log(JSON.stringify(this.state, null, 2));
+    createGist(createFiles(this.state.nodes))
+      .then(gist => {
+        console.log(gist);
+        const params = new URLSearchParams(window.location.search);
+        params.set("gist", gist.id);
+        window.history.replaceState(
+          {},
+          "",
+          `${window.location.pathname}?${params}`
+        );
+      })
+      .catch(err => console.error(err.message));
+  };
+
+  closeSearchBox = event => {
+    this.setState({ searchBox: undefined });
   };
 
   render() {
+    const searchBox =
+      this.state.searchBox !== undefined ? (
+        <SearchBox
+          ref="searchBox"
+          closeSearchBox={this.closeSearchBox}
+          nodes={nodes}
+          addNode={this.addNode}
+          xy={this.state.searchBox}
+          normXY={this.svgPoint(...this.state.searchBox)}
+        />
+      ) : (
+        ""
+      );
+
     return (
       <svg
         id="graph"
@@ -290,9 +328,17 @@ class Graph extends React.Component {
           {Object.keys(this.state.nodes).map(this.buildNode)}
         </g>
 
-        <text className="button" x={10} y={10} onClick={this.saveGraph}>
+        <text
+          className="button"
+          x={10}
+          y={20}
+          onClick={this.saveGraph}
+          fill="white"
+        >
           Save Graph
         </text>
+
+        {searchBox}
       </svg>
     );
   }

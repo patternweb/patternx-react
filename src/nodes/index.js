@@ -12,6 +12,7 @@ import * as PopupNode from "./PopupNode";
 const nodes = {
   Add: {
     node: AddNode.default,
+    description: "adds two values",
     implementation: AddNode.implementation,
     fn: AddNode.fn,
     inports: {
@@ -24,6 +25,7 @@ const nodes = {
   },
   Popup: {
     node: PopupNode.default,
+    description: "displays 3d output",
     implementation: PopupNode.implementation,
     inports: {
       scene: "Scene",
@@ -32,6 +34,7 @@ const nodes = {
   },
   WebSocket: {
     node: WebSocketNode.default,
+    description: "streams data from a websocket",
     implementation: WebSocketNode.implementation,
     outports: {
       websocket: "Stream"
@@ -39,6 +42,7 @@ const nodes = {
   },
   Buffer: {
     node: BufferNode.default,
+    description: "stores last X values from a stream",
     inports: {
       stream: "Stream",
       bufferSize: "Number"
@@ -50,6 +54,7 @@ const nodes = {
   NumberSlider: {
     node: NumberSliderNode.default,
     fn: NumberSliderNode.fn,
+    description: "user-adjustable number variable",
     outports: {
       value: "Number"
     },
@@ -59,24 +64,28 @@ const nodes = {
   },
   Log: {
     node: LogNode.default,
+    description: "displays output of node as text",
     inports: {
       value: "Any"
     }
   },
   Canvas: {
     node: CanvasNode.default,
+    description: "2D display",
     inports: {
       commands: "Array"
     }
   },
   Number: {
     node: NumberNode.default,
+    description: "numeric variable",
     outports: {
       value: "Number"
     }
   },
   Polygon: {
     node: PolygonNode.default,
+    description: "regular 2d polygon",
     inports: {
       radius: "number",
       vertexCount: "number",

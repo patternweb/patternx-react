@@ -15,7 +15,7 @@ class AddNode extends React.Component {
   };
 
   render() {
-    return <p>{this.props.value}</p>;
+    return <h1>{this.props.value}</h1>;
   }
 }
 

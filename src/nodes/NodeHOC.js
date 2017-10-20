@@ -49,6 +49,18 @@ const NodeHOC = InnerComponent => {
       });
     };
 
+    timeout = null;
+
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.value !== this.props.value) {
+        this.refs.rect.classList.add("animate");
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          this.refs.rect.classList.remove("animate");
+        }, 50);
+      }
+    }
+
     render() {
       const {
         state = {},
@@ -57,6 +69,7 @@ const NodeHOC = InnerComponent => {
         y = 0,
         value
       } = this.props;
+
       return (
         <g ref="g">
           <g
@@ -66,6 +79,7 @@ const NodeHOC = InnerComponent => {
             onMouseDown={this.props.setActiveNode}
           >
             <rect
+              ref="rect"
               width={width}
               height={height}
               x={-width / 2}
