@@ -256,6 +256,8 @@ text.button {
 }
 
 #searchBox input {
+  background: #333;
+  border: none;
   display: block;
   padding: 10px;
   width: 100%;
