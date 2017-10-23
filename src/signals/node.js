@@ -1,4 +1,4 @@
-import chalk from "chalk";
+// import chalk from "chalk";
 import deepEqual from "fast-deep-equal";
 
 export default function Node(id, fn, initialParams = {}, inports = []) {
@@ -43,7 +43,8 @@ Node.prototype.remove = function() {
   while (this.listeners.length > 0) {
     this.listeners.pop().detach();
   }
-  console.log(chalk.red("REMOVED"), this.id);
+  // console.log(chalk.red("REMOVED"), this.id);
+  console.log("REMOVED", this.id);
 };
 
 Node.prototype.update = function(params) {
@@ -58,7 +59,8 @@ Node.prototype.update = function(params) {
 
 Node.prototype.run = function(cb) {
   if (this.output) {
-    console.log(chalk.green("CACHED OUTPUT"), this.id);
+    // console.log(chalk.green("CACHED OUTPUT"), this.id);
+    console.log("CACHED OUTPUT", this.id);
     cb(this.output);
   } else if (
     this.inports.every(
@@ -77,7 +79,7 @@ Node.prototype.run = function(cb) {
     // this._attachFn = this.generator(this.input)
     // this._attachFn.next()
   } else {
-    console.log(chalk.yellow("WAITING"), this.id, this.input);
+    console.log("WAITING", this.id, this.input);
     cb(this.output);
   }
 };
